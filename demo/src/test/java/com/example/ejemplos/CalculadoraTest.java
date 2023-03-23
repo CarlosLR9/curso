@@ -8,6 +8,8 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class CalculadoraTest {
 	Calculadora calc;
@@ -72,8 +74,16 @@ class CalculadoraTest {
 				assertEquals(0, calc.suma(-1, 1));
 				assertEquals(0, calc.suma(1, -1));
 				assertEquals(-2, calc.suma(-1, -1));
-				assertEquals(0, calc.suma(2, -2));
+				assertEquals(0, calc.suma(0, 0));
 			}
+			
+			@ParameterizedTest(name = "{0} + {1} = {2}")
+			@CsvSource(value = {"1,1,2", "0.1,0.2,0.3", "0,0,0", "-1,1,1"})
+			void testSumasOK(double op1, double op2, double rslt) {
+				assertEquals(rslt, calc.suma(op1, op2));
+			}
+			
+			
 		}
 		
 		@Nested
