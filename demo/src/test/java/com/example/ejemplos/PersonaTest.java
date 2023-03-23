@@ -7,6 +7,8 @@ import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.Test;
 
+import com.example.core.test.Smoke;
+
 class PersonaTest {
 
 	@BeforeEach
@@ -14,6 +16,7 @@ class PersonaTest {
 	}
 
 	@Test
+	@Smoke
 	void createTest() {
 		var p = Persona.builder().id(1).nombre("Pepito").apellidos("Grillo").build();
 //		p = null;
