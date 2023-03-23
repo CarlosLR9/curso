@@ -25,7 +25,7 @@ class PersonaTest {
 		assertAll("Validar propiedades",
 				() -> assertEquals(1, p.getId(), "id"),
 				() -> assertEquals("Pepito", p.getNombre(), "getNombre"),
-				() -> assertEquals("Grillo", p.getApellidos(), "getApellidos")
+				() -> assertEquals("Grillo", p.getApellidos().get(), "getApellidos")
 				);
 	}
 
@@ -41,7 +41,12 @@ class PersonaTest {
 		assertAll("Validar propiedades",
 			() -> assertEquals(repetitionInfo.getCurrentRepetition(), p.getId(), "id"),
 			() -> assertEquals("Pepito" + repetitionInfo.getCurrentRepetition(), p.getNombre(), "getNombre"),
-			() -> assertEquals("Grillo", p.getApellidos(), "getApellidos")
+			() -> assertEquals("Grillo", p.getApellidos().get(), "getApellidos")
 		);
+	}
+	
+	@Test
+	void setNombreTest() {
+		
 	}
 }

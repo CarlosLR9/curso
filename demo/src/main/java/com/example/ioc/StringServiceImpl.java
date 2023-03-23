@@ -3,6 +3,8 @@ package com.example.ioc;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.example.exceptions.InvalidDataException;
+
 @Service
 @Qualifier("Local")
 public class StringServiceImpl implements StringService {
@@ -20,17 +22,29 @@ public class StringServiceImpl implements StringService {
 
 	@Override
 	public void add(String item) {
-		dao.save(item);
+		try {
+			dao.save(item);
+		} catch (InvalidDataException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void modify(String item) {
-		dao.save(item);
+		try {
+			dao.save(item);
+		} catch (InvalidDataException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void remove(Integer id) {
-		dao.save(id.toString());
+		try {
+			dao.save(id.toString());
+		} catch (InvalidDataException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

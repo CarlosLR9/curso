@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.example.exceptions.InvalidDataException;
+import com.example.exceptions.NotFoundException;
+
 @Service
 @Qualifier("Remoto")
 public class StringRemoteServiceImpl implements StringService {
@@ -16,18 +19,30 @@ public class StringRemoteServiceImpl implements StringService {
 	}
 
 	@Override
-	public void add(String item) {
-		dao.save(item);
+	public void add(String item) throws NotFoundException {
+		try {
+			dao.save(item);
+		} catch (InvalidDataException e) {
+			throw new NotFoundException("No encontrado", e);
+		}
 	}
 
 	@Override
-	public void modify(String item) {
-		dao.save(item);
+	public void modify(String item) throws InvalidDataException {
+		try {
+			dao.save(item);
+		} catch (InvalidDataException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public void remove(Integer id) {
-		dao.save(id.toString());
+	public void remove(Integer id) throws InvalidDataException {
+		try {
+			dao.save(id.toString());
+		} catch (InvalidDataException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

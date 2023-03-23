@@ -4,6 +4,9 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
+
+import com.example.exceptions.ArgumentoInvalidoException;
+import com.example.exceptions.InvalidDataException;
 //import org.springframework.stereotype.Component; //fuera de uso
 
 // @Component
@@ -19,7 +22,10 @@ public class StringRepositoryImpl implements StringRepository {
 	}
 
 	@Override
-	public void save(String item) {
+	public void save(String item) throws InvalidDataException {
+		if (item == "")
+			throw new InvalidDataException("La cadena no puede estar vacia");
+//			throw new ArgumentoInvalidoException();
 		System.out.println("Anterior: " + ultimo);
 		this.ultimo = item;
 		System.out.println("Guardo el item: " + item);
