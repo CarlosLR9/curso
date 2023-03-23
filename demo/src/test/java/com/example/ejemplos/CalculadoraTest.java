@@ -66,6 +66,14 @@ class CalculadoraTest {
 				assertEquals(0.1, rslt);
 				//assertEquals(0.1, rslt, 0.01);
 			}
+			
+			void testSumaMultiple() {
+				assertEquals(2, calc.suma(1, 1));
+				assertEquals(0, calc.suma(-1, 1));
+				assertEquals(0, calc.suma(1, -1));
+				assertEquals(-2, calc.suma(-1, -1));
+				assertEquals(0, calc.suma(2, -2));
+			}
 		}
 		
 		@Nested

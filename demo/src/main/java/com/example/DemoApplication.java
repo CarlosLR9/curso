@@ -9,8 +9,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Lazy;
 
 import com.example.ioc.Rango;
-//import com.example.ioc.StringRepository;
-//import com.example.ioc.StringRepositoryImpl;
+import com.example.ioc.StringRepository;
+import com.example.ioc.StringRepositoryImpl;
 import com.example.ioc.StringService;
 //import com.example.ioc.StringServiceImpl;
 import com.example.ioc.UnaTonteria;
@@ -44,7 +44,7 @@ public class DemoApplication implements CommandLineRunner{
 	public void run(String... args) throws Exception {
 		System.out.println("Aplicación arrancada");
 		
-//		StringRepository dao = new StringRepositoryImpl();
+		StringRepository dao = new StringRepositoryImpl();
 //		dao = new StringRepositoryMockImpl();
 //		var srv = new StringServiceImpl(dao);
 //		System.out.println(srv.get(1));
