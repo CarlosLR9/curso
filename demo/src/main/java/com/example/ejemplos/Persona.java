@@ -3,9 +3,9 @@ package com.example.ejemplos;
 import java.util.Optional;
 
 import lombok.Builder;
-import lombok.Data;
+//import lombok.Data;
 
-@Data
+//@Data
 @Builder
 public class Persona {
 	private int id;

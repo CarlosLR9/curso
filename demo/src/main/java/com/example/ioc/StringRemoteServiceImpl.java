@@ -19,30 +19,18 @@ public class StringRemoteServiceImpl implements StringService {
 	}
 
 	@Override
-	public void add(String item) throws NotFoundException {
-		try {
-			dao.save(item);
-		} catch (InvalidDataException e) {
-			throw new NotFoundException("No encontrado", e);
-		}
+	public void add(String item) throws InvalidDataException {
+		dao.save(item);
 	}
 
 	@Override
 	public void modify(String item) throws InvalidDataException {
-		try {
-			dao.save(item);
-		} catch (InvalidDataException e) {
-			e.printStackTrace();
-		}
+		dao.save(item);
 	}
 
 	@Override
 	public void remove(Integer id) throws InvalidDataException {
-		try {
-			dao.save(id.toString());
-		} catch (InvalidDataException e) {
-			e.printStackTrace();
-		}
+		dao.save(id.toString());
 	}
 
 }
