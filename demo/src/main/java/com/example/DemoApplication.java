@@ -25,6 +25,7 @@ public class DemoApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		System.out.println("Aplicación arrancada");
 //		(new EjemplosIoC()).run();
+		
 //		var actors = new Actor(0, "Pepito", "Grillo");
 //		dao.save(actors);
 //		dao.deleteById(205);
@@ -40,9 +41,12 @@ public class DemoApplication implements CommandLineRunner {
 //		}
 //		dao.findTop5ByFirstNameStartingWithOrderByLastNameDesc("p")
 //			.forEach(System.out::println);
-		dao.findTop5ByFirstNameStartingWith("p", Sort.by("LastName").descending())
-			.forEach(System.out::println);
-		dao.findTop5ByFirstNameStartingWith("p", Sort.by("LastName"))
-		.forEach(System.out::println);
+//		dao.findTop5ByFirstNameStartingWith("p", Sort.by("LastName").descending())
+//			.forEach(System.out::println);
+//		dao.findTop5ByFirstNameStartingWith("p", Sort.by("LastName"))
+//		.forEach(System.out::println);
+//		dao.findConJPQL().forEach(System.out::println);
+//		dao.findConJPQL(5).forEach(System.out::println);
+		dao.findConSQL(5).forEach(System.out::println);
 	}
 }
