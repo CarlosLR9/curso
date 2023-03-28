@@ -47,6 +47,10 @@ public class DemoApplication implements CommandLineRunner {
 //		.forEach(System.out::println);
 //		dao.findConJPQL().forEach(System.out::println);
 //		dao.findConJPQL(5).forEach(System.out::println);
-		dao.findConSQL(5).forEach(System.out::println);
-	}
+//		dao.findConSQL(5).forEach(System.out::println);
+		dao.findAll((root, query, builder) -> builder.lessThan(root.get("actorId"), 5))
+			.forEach(System.out::println);
+		dao.findAll((root, query, builder) -> builder.greaterThan(root.get("actorId"), 200))
+			.forEach(System.out::println);
+		}
 }
