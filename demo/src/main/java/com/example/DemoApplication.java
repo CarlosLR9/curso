@@ -9,6 +9,8 @@ import org.springframework.data.domain.Sort;
 import com.example.domains.contract.repositories.ActorRepository;
 import com.example.domains.entities.Actor;
 
+import jakarta.transaction.Transactional;
+
 //import com.example.ioc.EjemplosIoC;
 
 @SpringBootApplication
@@ -22,6 +24,7 @@ public class DemoApplication implements CommandLineRunner {
 	ActorRepository dao;
 
 	@Override
+	@Transactional
 	public void run(String... args) throws Exception {
 		System.out.println("Aplicación arrancada");
 //		(new EjemplosIoC()).run();
@@ -48,9 +51,17 @@ public class DemoApplication implements CommandLineRunner {
 //		dao.findConJPQL().forEach(System.out::println);
 //		dao.findConJPQL(5).forEach(System.out::println);
 //		dao.findConSQL(5).forEach(System.out::println);
-		dao.findAll((root, query, builder) -> builder.lessThan(root.get("actorId"), 5))
-			.forEach(System.out::println);
-		dao.findAll((root, query, builder) -> builder.greaterThan(root.get("actorId"), 200))
-			.forEach(System.out::println);
+//		dao.findAll((root, query, builder) -> builder.lessThan(root.get("actorId"), 5))
+//			.forEach(System.out::println);
+//		dao.findAll((root, query, builder) -> builder.greaterThan(root.get("actorId"), 200))
+//			.forEach(System.out::println);
+		var item = dao.findById(1);
+		if (item.isPresent()) {
+			var actor = item.get();
+			System.out.println(actor);
+			actor.getFilmActors().forEach(o -> System.out.println(o.getFilm().getTitle()));
+		} else {
+			System.out.println("Actor no encontrado");
 		}
+	}
 }
