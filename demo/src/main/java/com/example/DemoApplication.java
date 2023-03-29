@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.PageRequest;
 
-import com.example.domains.contract.repositories.ActorRepository;
+import com.example.domains.contracts.repositories.ActorRepository;
 import com.example.domains.entities.Actor;
 import com.example.domains.entities.dtos.ActorDTO;
 import com.example.domains.entities.dtos.ActorShort;
