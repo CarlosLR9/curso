@@ -1,6 +1,6 @@
 package com.example.validacion;
 
-public class NifValidator {
+public class NifValid {
 	
 	public boolean nifValid(String value) {
 		value = value.toUpperCase();

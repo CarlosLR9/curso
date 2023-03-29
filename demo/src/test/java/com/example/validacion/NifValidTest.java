@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-class NifValidatorTest {
+class NifValidTest {
 
 	@ParameterizedTest(name = "{0}")
 	@CsvSource(value = { 
@@ -17,7 +17,7 @@ class NifValidatorTest {
 			"24R",
 			"97597777Z"})
 	void testNifOK(String value) {
-		var nifVal = new NifValidator();
+		var nifVal = new NifValid();
 
 		assertTrue(nifVal.nifValid(value));
 	}
