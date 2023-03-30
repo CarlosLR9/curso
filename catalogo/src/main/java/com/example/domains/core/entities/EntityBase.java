@@ -28,11 +28,6 @@ public abstract class EntityBase<E> {
 		if (lst.isEmpty())
 			return "";
 		StringBuilder sb = new StringBuilder("ERRORES:");
-//		getErrors().forEach(item -> sb.append(" " + item.getPropertyPath() + ": " + item.getMessage() + ". "));
-//		getErrors().stream().map(item -> " " + item.getPropertyPath() + ": " + item.getMessage() + ". ")
-//			.sorted().forEach(sb::append);
-//		lst.stream().sorted((a,b)->a.getPropertyPath().toString().compareTo(b.getPropertyPath().toString()))
-//			.forEach(item -> sb.append(" " + item.getPropertyPath() + ": " + item.getMessage() + "."));
 		getErrorsFields().forEach((fld, err) -> sb.append(" " + fld + ": " + err + "."));
 		return sb.toString();
 	}
