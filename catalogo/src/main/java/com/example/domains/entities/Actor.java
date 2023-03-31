@@ -1,18 +1,18 @@
 package com.example.domains.entities;
 
 import java.io.Serializable;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
-
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import com.example.domains.core.entities.EntityBase;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 
 /**
@@ -33,6 +33,7 @@ public class Actor extends EntityBase<Actor> implements Serializable {
 	@Column(name="first_name", nullable=false, length=45)
 	@NotBlank
 	@Size(max=45, min=2)
+//	@NIF
 	private String firstName;
 
 	@Column(name="last_name", nullable=false, length=45)
@@ -45,7 +46,7 @@ public class Actor extends EntityBase<Actor> implements Serializable {
 	private Timestamp lastUpdate;
 
 	//bi-directional many-to-one association to FilmActor
-	@OneToMany(mappedBy="actor"/*, fetch = FetchType.EAGER*/)
+	@OneToMany(mappedBy="actor", fetch = FetchType.LAZY)
 	private List<FilmActor> filmActors = new ArrayList<>();
 
 	public Actor() {
@@ -62,6 +63,7 @@ public class Actor extends EntityBase<Actor> implements Serializable {
 		this.firstName = firstName;
 		this.lastName = lastName;
 	}
+
 
 	public int getActorId() {
 		return this.actorId;
@@ -103,8 +105,11 @@ public class Actor extends EntityBase<Actor> implements Serializable {
 		this.filmActors = filmActors;
 	}
 
-	public void addFilmActor(Film film) {
-		getFilmActors().add(new FilmActor(this, film));
+	public FilmActor addFilmActor(FilmActor filmActor) {
+		getFilmActors().add(filmActor);
+		filmActor.setActor(this);
+
+		return filmActor;
 	}
 
 	public FilmActor removeFilmActor(FilmActor filmActor) {
@@ -137,4 +142,11 @@ public class Actor extends EntityBase<Actor> implements Serializable {
 				+ lastUpdate + "]";
 	}
 
+	public void jubilate() {
+		
+	}
+	
+	public void recibePremio(String premio) {
+		
+	}
 }

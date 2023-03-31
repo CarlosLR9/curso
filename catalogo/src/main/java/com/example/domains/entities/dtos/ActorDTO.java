@@ -3,14 +3,9 @@ package com.example.domains.entities.dtos;
 import com.example.domains.entities.Actor;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.Value;
 
 @Value
-//@Data @AllArgsConstructor @NoArgsConstructor
 public class ActorDTO {
 	@JsonProperty("id")
 	private int actorId;
@@ -19,7 +14,7 @@ public class ActorDTO {
 	@JsonProperty("apellidos")
 	private String lastName;
 	
-	public static ActorDTO from(/* @NonNull */ Actor target) {
+	public static ActorDTO from(Actor target) {
 		return new ActorDTO(target.getActorId(), target.getFirstName(), target.getLastName());
 	}
 

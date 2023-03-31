@@ -1,5 +1,6 @@
 package com.example.domains.services;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +16,8 @@ import com.example.domains.entities.Actor;
 import com.example.exceptions.DuplicateKeyException;
 import com.example.exceptions.InvalidDataException;
 import com.example.exceptions.NotFoundException;
+
+import lombok.NonNull;
 
 @Service
 public class ActorServiceImpl implements ActorService {
@@ -64,7 +67,7 @@ public class ActorServiceImpl implements ActorService {
 			throw new InvalidDataException(item.getErrorsMessage());
 		if(dao.existsById(item.getActorId()))
 			throw new DuplicateKeyException(item.getErrorsMessage());
-
+		
 		return dao.save(item);
 	}
 
@@ -76,7 +79,7 @@ public class ActorServiceImpl implements ActorService {
 			throw new InvalidDataException(item.getErrorsMessage());
 		if(!dao.existsById(item.getActorId()))
 			throw new NotFoundException();
-
+		
 		return dao.save(item);
 	}
 
@@ -90,6 +93,11 @@ public class ActorServiceImpl implements ActorService {
 	@Override
 	public void deleteById(Integer id) {
 		dao.deleteById(id);
+	}
+
+	@Override
+	public List<Actor> novedades(@NonNull Timestamp fecha) {
+		return dao.findByLastUpdateGreaterThanEqualOrderByLastUpdate(fecha);
 	}
 
 }
