@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data @AllArgsConstructor @NoArgsConstructor
 public class NovedadesDTO {
 	private List<FilmEditDTO> films;
-	private List<ActorDTO> actors;
+	private List<ActorEditDTO> actors;
 	private List<Category> categories;
 	private List<Language> languages;
 	

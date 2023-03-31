@@ -33,7 +33,6 @@ public class Actor extends EntityBase<Actor> implements Serializable {
 	@Column(name="first_name", nullable=false, length=45)
 	@NotBlank
 	@Size(max=45, min=2)
-//	@NIF
 	private String firstName;
 
 	@Column(name="last_name", nullable=false, length=45)
@@ -96,6 +95,19 @@ public class Actor extends EntityBase<Actor> implements Serializable {
 	public void setLastUpdate(Timestamp lastUpdate) {
 		this.lastUpdate = lastUpdate;
 	}
+	
+	public List<Film> getFilms() {
+		return this.filmActors.stream().map(item -> item.getFilm()).toList();
+	}
+	
+	public void addFilm(Film film) {
+		FilmActor filmActor = new FilmActor(film, this);
+		filmActors.add(filmActor);
+	}
+	
+	public void addFilm(int filmId) {
+		addFilm(new Film(filmId));
+	}
 
 	public List<FilmActor> getFilmActors() {
 		return this.filmActors;
@@ -149,4 +161,5 @@ public class Actor extends EntityBase<Actor> implements Serializable {
 	public void recibePremio(String premio) {
 		
 	}
+
 }
