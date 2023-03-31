@@ -4,6 +4,9 @@ import java.io.Serializable;
 import jakarta.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Objects;
+
+import com.example.domains.core.entities.EntityBase;
 
 
 /**
@@ -13,7 +16,7 @@ import java.util.List;
 @Entity
 @Table(name="film")
 @NamedQuery(name="Film.findAll", query="SELECT f FROM Film f")
-public class Film implements Serializable {
+public class Film extends EntityBase<Film> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -55,7 +58,31 @@ public class Film implements Serializable {
 
 	public Film() {
 	}
+	
+	public Film(int filmId) {
+		super();
+		this.filmId = filmId;
+	}
 
+	public Film(int filmId, String title, Language language) {
+		super();
+		this.filmId = filmId;
+		this.title = title;
+		this.language = language;
+	}
+	
+	public Film(int filmId, String description, int length, Short releaseYear, String title, Language language,
+			Language languageVO) {
+		super();
+		this.filmId = filmId;
+		this.description = description;
+		this.length = length;
+		this.releaseYear = releaseYear;
+		this.title = title;
+		this.language = language;
+		this.languageVO = languageVO;
+	}
+	
 	public int getFilmId() {
 		return this.filmId;
 	}
@@ -163,5 +190,31 @@ public class Film implements Serializable {
 
 		return filmCategory;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(filmId);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Film other = (Film) obj;
+		return filmId == other.filmId;
+	}
+
+	@Override
+	public String toString() {
+		return "Film [filmId=" + filmId + ", description=" + description + ", lastUpdate=" + lastUpdate + ", length="
+				+ length + ", releaseYear=" + releaseYear + ", title=" + title + ", language=" + language
+				+ ", languageVO=" + languageVO + "]";
+	}
+	
+	
 
 }

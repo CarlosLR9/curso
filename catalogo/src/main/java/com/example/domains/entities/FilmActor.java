@@ -34,6 +34,11 @@ public class FilmActor implements Serializable {
 	public FilmActor() {
 	}
 
+	public FilmActor(Actor actor, Film film) {
+		setActor(actor);
+		setFilm(film);
+	}
+
 	public FilmActorPK getId() {
 		return this.id;
 	}

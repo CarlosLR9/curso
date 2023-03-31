@@ -63,7 +63,6 @@ public class Actor extends EntityBase<Actor> implements Serializable {
 		this.lastName = lastName;
 	}
 
-
 	public int getActorId() {
 		return this.actorId;
 	}
@@ -104,11 +103,8 @@ public class Actor extends EntityBase<Actor> implements Serializable {
 		this.filmActors = filmActors;
 	}
 
-	public FilmActor addFilmActor(FilmActor filmActor) {
-		getFilmActors().add(filmActor);
-		filmActor.setActor(this);
-
-		return filmActor;
+	public void addFilmActor(Film film) {
+		getFilmActors().add(new FilmActor(this, film));
 	}
 
 	public FilmActor removeFilmActor(FilmActor filmActor) {
