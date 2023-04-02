@@ -31,8 +31,8 @@ public class DemoApplication implements CommandLineRunner {
 //	@Autowired
 //	ActorRepository dao;
 
-	@Autowired
-	ActorService srv;
+//	@Autowired
+//	ActorService srv;
 
 	@Override
 	@Transactional
