@@ -71,24 +71,14 @@ public class PersonasBatchConfiguration {
 				.build();
 	}
 	
-	//CSV a DB
+	// DB a CSV
 	
-//	@Bean
-//	public Job personasJob(PersonasJobListener listener, Step importCSV2DBStep1) {
-//		return new JobBuilder("personasJob", jobRepository)
-//				.incrementer(new RunIdIncrementer())
-//				.listener(listener)
-//				.start(importCSV2DBStep1)
-//				.build();
-//	}
-
-	// BD a CSV
-
 	@Bean
 	JdbcCursorItemReader<Persona> personaDBItemReader(DataSource dataSource) {
 		return new JdbcCursorItemReaderBuilder<Persona>().name("personaDBItemReader")
 				.sql("SELECT id, nombre, correo, ip FROM personas").dataSource(dataSource)
-				.rowMapper(new BeanPropertyRowMapper<>(Persona.class)).build();
+				.rowMapper(new BeanPropertyRowMapper<>(Persona.class))
+				.build();
 	}
 
 	@Bean
@@ -106,17 +96,43 @@ public class PersonasBatchConfiguration {
 					}
 				}).build();
 	}
-
+	
 	@Bean
 	public Step exportDB2CSVStep(JdbcCursorItemReader<Persona> personaDBItemReader) {
-		return new StepBuilder("exportDB2CSVStep", jobRepository).<Persona, Persona>chunk(100, transactionManager)
-				.reader(personaDBItemReader).writer(personaCSVItemWriter()).build();
+		return new StepBuilder("exportDB2CSVStep", jobRepository)
+				.<Persona, Persona>chunk(100, transactionManager)
+				.reader(personaDBItemReader)
+				.writer(personaCSVItemWriter())
+				.build();
+	}
+
+	// Tasklet
+	@Bean
+	public FTPLoadTasklet ftpLoadTasklet(@Value("${input.dir.name:./ftp}") String dir) {
+		FTPLoadTasklet tasklet = new FTPLoadTasklet();
+		tasklet.setDirectoryResource(new FileSystemResource(dir));
+		return tasklet;
 	}
 
 	@Bean
-	public Job personasJob(PersonasJobListener listener, Step importCSV2DBStep1, Step exportDB2CSVStep) {
-		return new JobBuilder("personasJob", jobRepository).incrementer(new RunIdIncrementer()).listener(listener)
-				.start(importCSV2DBStep1).next(exportDB2CSVStep).build();
+	public Step copyFilesInDir(FTPLoadTasklet ftpLoadTasklet) {
+	        return new StepBuilder("copyFilesInDir", jobRepository)
+	            .tasklet(ftpLoadTasklet, transactionManager)
+	            .build();
 	}
 
+
+	@Bean
+	public Job personasJob(PersonasJobListener listener, Step importCSV2DBStep1, 
+			Step exportDB2CSVStep, Step copyFilesInDir) {
+		return new JobBuilder("personasJob", jobRepository)
+				.incrementer(new RunIdIncrementer())
+				.listener(listener)
+				.start(copyFilesInDir)
+				.next(importCSV2DBStep1)
+				.next(exportDB2CSVStep)
+				.build();
+	}
+	
 }
+
