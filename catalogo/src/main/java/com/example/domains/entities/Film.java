@@ -285,6 +285,10 @@ public class Film extends EntityBase<Film> implements Serializable {
 	public void setLanguage(Language language) {
 		this.language = language;
 	}
+	
+	public void setLanguage(int languageId) {
+		setLanguage(new Language(languageId));
+	}
 
 	public Language getLanguageVO() {
 		return this.languageVO;
@@ -293,8 +297,12 @@ public class Film extends EntityBase<Film> implements Serializable {
 	public void setLanguageVO(Language languageVO) {
 		this.languageVO = languageVO;
 	}
+	
+	public void setLanguageVO(int languageId) {
+		setLanguageVO(new Language(languageId));
+	}
 
-	// Gestión de actores
+	// Gestion de actors
 
 	public List<Actor> getActors() {
 		return this.filmActors.stream().map(item -> item.getActor()).toList();
@@ -326,7 +334,7 @@ public class Film extends EntityBase<Film> implements Serializable {
 		filmActors.remove(filmActor.get());
 	}
 
-	// Gestión de categorias
+	// Gestion de categories
 
 	public List<Category> getCategories() {
 		return this.filmCategories.stream().map(item -> item.getCategory()).toList();
@@ -373,6 +381,14 @@ public class Film extends EntityBase<Film> implements Serializable {
 			return false;
 		Film other = (Film) obj;
 		return filmId == other.filmId;
+	}
+	
+	@Override
+	public String toString() {
+		return "Film [filmId=" + filmId + ", description=" + description + ", lastUpdate=" + lastUpdate + ", length="
+				+ length + ", rating=" + rating + ", releaseYear=" + releaseYear + ", rentalDuration=" + rentalDuration
+				+ ", rentalRate=" + rentalRate + ", replacementCost=" + replacementCost + ", title=" + title
+				+ ", language=" + language + ", languageVO=" + languageVO + "]";
 	}
 
 	public Film merge(Film target) {

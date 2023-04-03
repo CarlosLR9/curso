@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -44,7 +45,7 @@ public class Category extends EntityBase<Category> implements Serializable {
 	//bi-directional many-to-one association to FilmCategory
 	@OneToMany(mappedBy="category")
 	@JsonIgnore
-	private List<FilmCategory> filmCategories;
+	private List<FilmCategory> filmCategories = new ArrayList<FilmCategory>();
 
 	public Category() {
 	}
@@ -52,6 +53,12 @@ public class Category extends EntityBase<Category> implements Serializable {
 	public Category(int categoryId) {
 		super();
 		this.categoryId = categoryId;
+	}
+	
+	public Category(int categoryId, @NotBlank @Size(max = 25) String name) {
+		super();
+		this.categoryId = categoryId;
+		this.name = name;
 	}
 
 	public int getCategoryId() {
@@ -77,28 +84,38 @@ public class Category extends EntityBase<Category> implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	// Gestion de films
 
-	public List<FilmCategory> getFilmCategories() {
-		return this.filmCategories;
-	}
+		public List<Film> getFilms() {
+			return this.filmCategories.stream().map(item -> item.getFilm()).toList();
+		}
 
-	public void setFilmCategories(List<FilmCategory> filmCategories) {
-		this.filmCategories = filmCategories;
-	}
+		public void setFilms(List<Film> source) {
+			if (filmCategories == null || !filmCategories.isEmpty())
+				clearFilms();
+			source.forEach(item -> addFilm(item));
+		}
 
-	public FilmCategory addFilmCategory(FilmCategory filmCategory) {
-		getFilmCategories().add(filmCategory);
-		filmCategory.setCategory(this);
+		public void clearFilms() {
+			filmCategories = new ArrayList<FilmCategory>();
+		}
 
-		return filmCategory;
-	}
+		public void addFilm(Film item) {
+			FilmCategory filmCategory = new FilmCategory(item, this);
+			filmCategories.add(filmCategory);
+		}
 
-	public FilmCategory removeFilmCategory(FilmCategory filmCategory) {
-		getFilmCategories().remove(filmCategory);
-		filmCategory.setCategory(null);
+		public void addFilm(int id) {
+			addFilm(new Film(id));
+		}
 
-		return filmCategory;
-	}
+		public void removeFilm(Film ele) {
+			var filmCategory = filmCategories.stream().filter(item -> item.getFilm().equals(ele)).findFirst();
+			if (filmCategory.isEmpty())
+				return;
+			filmCategories.remove(filmCategory.get());
+		}
 
 	@Override
 	public int hashCode() {
@@ -120,6 +137,16 @@ public class Category extends EntityBase<Category> implements Serializable {
 	@Override
 	public String toString() {
 		return "Category [categoryId=" + categoryId + ", name=" + name + ", lastUpdate=" + lastUpdate + "]";
+	}
+	
+	public Category merge(Category target) {
+		target.name = name;
+		// Borra las peliculas que sobran
+		target.getFilms().stream().filter(item -> !getFilms().contains(item))
+				.forEach(item -> target.removeFilm(item));
+		// Añade las peliculas que faltan
+		getFilms().stream().filter(item -> !target.getFilms().contains(item)).forEach(item -> target.addFilm(item));
+		return target;
 	}
 
 }

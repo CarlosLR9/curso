@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -50,7 +51,7 @@ public class Language extends EntityBase<Language> implements Serializable {
 	//bi-directional many-to-one association to Film
 	@OneToMany(mappedBy="language")
 	@JsonIgnore
-	private List<Film> films;
+	private List<Film> films = new ArrayList<Film>();
 
 	//bi-directional many-to-one association to Film
 	@OneToMany(mappedBy="languageVO")
@@ -109,6 +110,10 @@ public class Language extends EntityBase<Language> implements Serializable {
 		return film;
 	}
 
+	public void addFilm(int filmId) {
+		addFilm(new Film(filmId));
+	}
+
 	public Film removeFilm(Film film) {
 		getFilms().remove(film);
 		film.setLanguage(null);
@@ -129,6 +134,10 @@ public class Language extends EntityBase<Language> implements Serializable {
 		filmsVO.setLanguageVO(this);
 
 		return filmsVO;
+	}
+	
+	public void addFilmsVO(int filmId) {
+		addFilmsVO(new Film(filmId));
 	}
 
 	public Film removeFilmsVO(Film filmsVO) {
@@ -158,6 +167,19 @@ public class Language extends EntityBase<Language> implements Serializable {
 	@Override
 	public String toString() {
 		return "Language [languageId=" + languageId + ", name=" + name + "]";
+	}
+	
+	public Language merge(Language target) {
+		target.name = name;
+		// Borra las peliculas que sobran
+		target.getFilms().stream().filter(item -> !getFilms().contains(item))
+				.forEach(item -> target.removeFilm(item));
+		target.getFilmsVO().stream().filter(item -> !getFilmsVO().contains(item))
+		.forEach(item -> target.removeFilmsVO(item));
+		// Añade las peliculas que faltan
+		getFilms().stream().filter(item -> !target.getFilms().contains(item)).forEach(item -> target.addFilm(item));
+		getFilmsVO().stream().filter(item -> !target.getFilmsVO().contains(item)).forEach(item -> target.addFilmsVO(item));
+		return target;
 	}
 
 }
