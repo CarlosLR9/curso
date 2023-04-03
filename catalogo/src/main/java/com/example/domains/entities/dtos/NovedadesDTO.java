@@ -2,9 +2,6 @@ package com.example.domains.entities.dtos;
 
 import java.util.List;
 
-import com.example.domains.entities.Category;
-import com.example.domains.entities.Language;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class NovedadesDTO {
 	private List<FilmEditDTO> films;
 	private List<ActorEditDTO> actors;
-	private List<Category> categories;
-	private List<Language> languages;
+	private List<CategoryEditDTO> categories;
+	private List<LanguageEditDTO> languages;
 	
 }

@@ -133,22 +133,22 @@ public class Language extends EntityBase<Language> implements Serializable {
 		this.filmsVO = filmsVO;
 	}
 
-	public Film addFilmsVO(Film filmsVO) {
+	public Film addFilmVO(Film filmsVO) {
 		getFilmsVO().add(filmsVO);
 		filmsVO.setLanguageVO(this);
 
 		return filmsVO;
 	}
 	
-	public void addFilmsVO(int filmId) {
-		addFilmsVO(new Film(filmId));
+	public void addFilmVO(int filmId) {
+		addFilmVO(new Film(filmId));
 	}
 	
 	public void clearFilmsVO() {
 		filmsVO = new ArrayList<Film>();
 	}
 
-	public Film removeFilmsVO(Film filmsVO) {
+	public Film removeFilmVO(Film filmsVO) {
 		getFilmsVO().remove(filmsVO);
 		filmsVO.setLanguageVO(null);
 
@@ -183,10 +183,10 @@ public class Language extends EntityBase<Language> implements Serializable {
 		target.getFilms().stream().filter(item -> !getFilms().contains(item))
 				.forEach(item -> target.removeFilm(item));
 		target.getFilmsVO().stream().filter(item -> !getFilmsVO().contains(item))
-		.forEach(item -> target.removeFilmsVO(item));
+		.forEach(item -> target.removeFilmVO(item));
 		// Añade las peliculas que faltan
 		getFilms().stream().filter(item -> !target.getFilms().contains(item)).forEach(item -> target.addFilm(item));
-		getFilmsVO().stream().filter(item -> !target.getFilmsVO().contains(item)).forEach(item -> target.addFilmsVO(item));
+		getFilmsVO().stream().filter(item -> !target.getFilmsVO().contains(item)).forEach(item -> target.addFilmVO(item));
 		return target;
 	}
 

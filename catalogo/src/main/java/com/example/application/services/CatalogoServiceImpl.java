@@ -12,6 +12,8 @@ import com.example.domains.contracts.services.FilmService;
 import com.example.domains.contracts.services.LanguageService;
 import com.example.domains.entities.dtos.ActorEditDTO;
 import com.example.domains.entities.dtos.FilmEditDTO;
+import com.example.domains.entities.dtos.CategoryEditDTO;
+import com.example.domains.entities.dtos.LanguageEditDTO;
 import com.example.domains.entities.dtos.NovedadesDTO;
 
 @Service
@@ -33,8 +35,8 @@ public class CatalogoServiceImpl implements CatalogoService {
 		return new NovedadesDTO(
 				filmSrv.novedades(fecha).stream().map(item -> FilmEditDTO.from(item)).toList(), 
 				artorSrv.novedades(fecha).stream().map(item -> ActorEditDTO.from(item)).toList(), 
-				categorySrv.novedades(fecha), 
-				languageSrv.novedades(fecha)
+				categorySrv.novedades(fecha).stream().map(item -> CategoryEditDTO.from(item)).toList(), 
+				languageSrv.novedades(fecha).stream().map(item -> LanguageEditDTO.from(item)).toList()
 				);
 	}
 
