@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.example.domains.entities.Actor;
 import com.example.domains.entities.Category;
 import com.fasterxml.jackson.annotation.JsonProperty;
 

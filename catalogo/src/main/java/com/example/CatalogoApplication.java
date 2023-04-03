@@ -1,12 +1,15 @@
 package com.example;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.example.application.services.CatalogoService;
+import com.example.application.services.CatalogoServiceImpl;
 import com.example.domains.contracts.services.FilmService;
 import com.example.domains.entities.Actor;
 import com.example.domains.entities.Film;
@@ -23,8 +26,11 @@ public class CatalogoApplication implements CommandLineRunner  {
 		SpringApplication.run(CatalogoApplication.class, args);
 	}
 
+//	@Autowired
+//	FilmService srv;
+	
 	@Autowired
-	FilmService srv;
+	CatalogoService catalogoSrv;
 	
 	@Override
 	@Transactional
@@ -48,6 +54,7 @@ public class CatalogoApplication implements CommandLineRunner  {
 //		peli.addCategory(1);
 //		peli.setTitle("Adios mundo");
 //		srv.modify(peli);
-		srv.deleteById(1001);
+//		srv.deleteById(1001);
+		catalogoSrv.novedades(Timestamp.valueOf("2019-01-01 00:00:00"));
 	}
 }
