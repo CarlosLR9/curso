@@ -15,6 +15,8 @@ import com.example.exceptions.DuplicateKeyException;
 import com.example.exceptions.InvalidDataException;
 import com.example.exceptions.NotFoundException;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class CategoryServiceImpl implements CategoryService {
 	@Autowired
@@ -31,6 +33,7 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
+	@Transactional
 	public Category add(Category item) throws DuplicateKeyException, InvalidDataException {
 		if(item == null)
 			throw new InvalidDataException("Faltan los datos");
@@ -38,18 +41,24 @@ public class CategoryServiceImpl implements CategoryService {
 			throw new InvalidDataException(item.getErrorsMessage(), item.getErrorsFields());
 		if(getOne(item.getCategoryId()).isPresent())
 			throw new DuplicateKeyException();
-		return dao.save(item);
+		var films = item.getFilms();
+		item.clearFilms();
+		var newItem = dao.save(item);
+		newItem.setFilms(films);
+		return dao.save(newItem);
 	}
 
 	@Override
+	@Transactional
 	public Category modify(Category item) throws NotFoundException, InvalidDataException {
 		if(item == null)
 			throw new InvalidDataException("Faltan los datos");
 		if(item.isInvalid())
 			throw new InvalidDataException(item.getErrorsMessage(), item.getErrorsFields());
-		if(getOne(item.getCategoryId()).isEmpty())
+		var leido = dao.findById(item.getCategoryId());
+		if(leido.isEmpty())
 			throw new NotFoundException();
-		return dao.save(item);
+		return dao.save(item.merge(leido.get()));
 	}
 
 	@Override

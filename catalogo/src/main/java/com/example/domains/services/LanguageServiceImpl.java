@@ -14,6 +14,7 @@ import com.example.exceptions.DuplicateKeyException;
 import com.example.exceptions.InvalidDataException;
 import com.example.exceptions.NotFoundException;
 
+import jakarta.transaction.Transactional;
 import lombok.NonNull;
 
 @Service
@@ -32,6 +33,7 @@ public class LanguageServiceImpl implements LanguageService {
 	}
 
 	@Override
+	@Transactional
 	public Language add(Language item) throws DuplicateKeyException, InvalidDataException {
 		if(item == null)
 			throw new InvalidDataException("No puede ser nulo");
@@ -39,20 +41,27 @@ public class LanguageServiceImpl implements LanguageService {
 			throw new InvalidDataException(item.getErrorsMessage());
 		if(dao.existsById(item.getLanguageId()))
 			throw new DuplicateKeyException(item.getErrorsMessage());
-		
-		return dao.save(item);
+		var films = item.getFilms();
+		var filmsVO = item.getFilmsVO();
+		item.clearFilms();
+		item.clearFilmsVO();
+		var newItem = dao.save(item);
+		newItem.setFilms(films);
+		newItem.setFilmsVO(filmsVO);
+		return dao.save(newItem);
 	}
 
 	@Override
+	@Transactional
 	public Language modify(Language item) throws NotFoundException, InvalidDataException {
 		if(item == null)
 			throw new InvalidDataException("No puede ser nulo");
 		if(item.isInvalid())
 			throw new InvalidDataException(item.getErrorsMessage());
-		if(!dao.existsById(item.getLanguageId()))
+		var leido = dao.findById(item.getLanguageId());
+		if(leido.isEmpty())
 			throw new NotFoundException();
-		
-		return dao.save(item);
+		return dao.save(item.merge(leido.get()));
 	}
 
 	@Override

@@ -113,6 +113,10 @@ public class Language extends EntityBase<Language> implements Serializable {
 	public void addFilm(int filmId) {
 		addFilm(new Film(filmId));
 	}
+	
+	public void clearFilms() {
+		films = new ArrayList<Film>();
+	}
 
 	public Film removeFilm(Film film) {
 		getFilms().remove(film);
@@ -138,6 +142,10 @@ public class Language extends EntityBase<Language> implements Serializable {
 	
 	public void addFilmsVO(int filmId) {
 		addFilmsVO(new Film(filmId));
+	}
+	
+	public void clearFilmsVO() {
+		filmsVO = new ArrayList<Film>();
 	}
 
 	public Film removeFilmsVO(Film filmsVO) {
