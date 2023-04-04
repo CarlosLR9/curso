@@ -29,8 +29,8 @@ public class CatalogoApplication implements CommandLineRunner  {
 //	@Autowired
 //	FilmService srv;
 	
-//	@Autowired
-//	CatalogoService catalogoSrv;
+	@Autowired
+	CatalogoService catalogoSrv;
 	
 	@Override
 	@Transactional
@@ -55,6 +55,7 @@ public class CatalogoApplication implements CommandLineRunner  {
 //		peli.setTitle("Adios mundo");
 //		srv.modify(peli);
 //		srv.deleteById(1001);
-		//catalogoSrv.novedades(Timestamp.valueOf("2019-01-01 00:00:00"));
+		
+//		System.out.println(catalogoSrv.novedades(Timestamp.valueOf("2019-01-01 00:00:00")));
 	}
 }
