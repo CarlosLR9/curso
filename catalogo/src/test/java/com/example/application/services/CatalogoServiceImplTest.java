@@ -1,5 +1,7 @@
 package com.example.application.services;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.sql.Timestamp;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -10,9 +12,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 
-
-@DataJpaTest
-@ComponentScan(basePackages = "com.example")
+@SpringBootTest
+//@DataJpaTest
+//@ComponentScan(basePackages = "com.example")
 class CatalogoServiceImplTest {
 
 	@Autowired
@@ -24,7 +26,8 @@ class CatalogoServiceImplTest {
 
 	@Test
 	void test() {
-		catalogoSrv.novedades(Timestamp.valueOf("2019-01-01 00:00:00"));
+		assertEquals("NovedadesDTO(films=[], actors=[ActorEditDTO(actorId=204, firstName=PEPITO, lastName=GRILLO, films=[])], categories=[], languages=[])"
+				, catalogoSrv.novedades(Timestamp.valueOf("2019-01-01 00:00:01")).toString());
 	}
 
 }

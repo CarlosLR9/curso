@@ -45,7 +45,7 @@ public class Actor extends EntityBase<Actor> implements Serializable {
 	private Timestamp lastUpdate;
 
 	// bi-directional many-to-one association to FilmActor
-	@OneToMany(mappedBy = "actor", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "actor", fetch = FetchType.EAGER)
 	@JsonIgnore
 	private List<FilmActor> filmActors = new ArrayList<FilmActor>();
 
@@ -57,7 +57,8 @@ public class Actor extends EntityBase<Actor> implements Serializable {
 		this.actorId = actorId;
 	}
 
-	public Actor(int actorId, @NotBlank @Size(max = 45, min = 2) String firstName,
+	public Actor(int actorId, @NotBlank @Size(max = 45, min = 2) 
+			@Pattern(regexp = "[A-Z]+", message = "Tiene que estar en mayusculas") String firstName,
 			@Size(max = 45, min = 2) @Pattern(regexp = "[A-Z]+", message = "Tiene que estar en mayusculas") String lastName) {
 		super();
 		this.actorId = actorId;

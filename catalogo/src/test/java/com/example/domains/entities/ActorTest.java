@@ -35,11 +35,6 @@ class ActorTest {
 	}
 
 	@Test
-	void testActorIntStringString() {
-		fail("Not yet implemented");
-	}
-
-	@Test
 	void testSetFilms() {
 		fail("Not yet implemented");
 	}
