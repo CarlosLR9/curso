@@ -16,6 +16,8 @@ import com.example.exceptions.DuplicateKeyException;
 import com.example.exceptions.InvalidDataException;
 import com.example.exceptions.NotFoundException;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class ActorServiceImpl implements ActorService {
 	@Autowired
@@ -57,6 +59,7 @@ public class ActorServiceImpl implements ActorService {
 	}
 
 	@Override
+//	@Transactional
 	public Actor add(Actor item) throws DuplicateKeyException, InvalidDataException {
 		if(item == null)
 			throw new InvalidDataException("No puede ser nulo");
@@ -64,7 +67,11 @@ public class ActorServiceImpl implements ActorService {
 			throw new InvalidDataException(item.getErrorsMessage());
 		if(dao.existsById(item.getActorId()))
 			throw new DuplicateKeyException(item.getErrorsMessage());
-
+//		var films = item.getFilms();
+//		item.clearFilms();
+//		var newItem = dao.save(item);
+//		newItem.setFilms(films);
+//		return dao.save(newItem);
 		return dao.save(item);
 	}
 

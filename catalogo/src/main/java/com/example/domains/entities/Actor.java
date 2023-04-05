@@ -33,6 +33,7 @@ public class Actor extends EntityBase<Actor> implements Serializable {
 	@Column(name = "first_name", nullable = false, length = 45)
 	@NotBlank
 	@Size(max = 45, min = 2)
+	@Pattern(regexp = "[A-Z]+", message = "Tiene que estar en mayusculas")
 	private String firstName;
 
 	@Column(name = "last_name", nullable = false, length = 45)
@@ -45,7 +46,7 @@ public class Actor extends EntityBase<Actor> implements Serializable {
 	private Timestamp lastUpdate;
 
 	// bi-directional many-to-one association to FilmActor
-	@OneToMany(mappedBy = "actor", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "actor", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private List<FilmActor> filmActors = new ArrayList<FilmActor>();
 

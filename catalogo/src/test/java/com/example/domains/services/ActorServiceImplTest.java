@@ -13,93 +13,108 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 
 import com.example.domains.contracts.repositories.ActorRepository;
 import com.example.domains.contracts.services.ActorService;
 import com.example.domains.entities.Actor;
+import com.example.exceptions.DuplicateKeyException;
+import com.example.exceptions.InvalidDataException;
+import com.example.exceptions.NotFoundException;
 
-@DataJpaTest
-@ComponentScan(basePackages = "com.example")
+@SpringBootTest
 class ActorServiceImplTest {
-
-	@MockBean
-	ActorRepository dao;
 
 	@Autowired
 	ActorService srv;
 
+	@Test
+	void testGetAll() throws DuplicateKeyException, InvalidDataException {
+		assertThat(srv.getAll().size()).isGreaterThanOrEqualTo(200);
+	}
+
+	@Test
+	void testGetOne() {
+		assertEquals("Actor [actorId=1, firstName=PENELOPE, lastName=GUINES, "
+				+ "lastUpdate=2006-02-15 04:34:33.0]", srv.getOne(1).get().toString());
+	}
 	
-	@BeforeEach
-	void setUp() throws Exception {
-		List<Actor> lista = new ArrayList<>(
-		        Arrays.asList(new Actor(1, "Pepito", "GRILLO"),
-		        		new Actor(2, "Carmelo", "COTON"),
-		        		new Actor(3, "Capitan", "TAN")));
-	}
-
 	@Test
-	void testGetAll() {
-		List<Actor> lista = new ArrayList<>(
-		        Arrays.asList(new Actor(1, "Pepito", "GRILLO"),
-		        		new Actor(2, "Carmelo", "COTON"),
-		        		new Actor(3, "Capitan", "TAN")));
-
-		when(dao.findAll()).thenReturn(lista);
-		var rslt = srv.getAll();
-		assertThat(rslt.size()).isEqualTo(3);
-	}
-
-	@Test
-	void testGetOne_valid() {
-		List<Actor> lista = new ArrayList<>(
-		        Arrays.asList(new Actor(1, "Pepito", "GRILLO"),
-		        		new Actor(2, "Carmelo", "COTON"),
-		        		new Actor(3, "Capitan", "TAN")));
-
-		when(dao.findById(1)).thenReturn(Optional.of(new Actor(1, "Pepito", "GRILLO")));
-		var rslt = srv.getOne(1);
-		assertThat(rslt.isPresent()).isTrue();
+	void testGetOneNotfound() {
+		assertThat(srv.getOne(3333).isEmpty()).isTrue();
 
 	}
 	
 	@Test
-	void testGetOne_notfound() {
-		when(dao.findById(1)).thenReturn(Optional.empty());
-		var rslt = srv.getOne(1);
-		assertThat(rslt.isEmpty()).isTrue();
-
+	void testAddNull() throws DuplicateKeyException, InvalidDataException {
+		assertThrows(InvalidDataException.class, () -> srv.add(null));
 	}
 	
 	@Test
-	void testGetOne() {
-		fail("Not yet implemented");
+	void testAddInvalid() throws DuplicateKeyException, InvalidDataException {
+		assertThrows(InvalidDataException.class, () -> srv.add(new Actor(0, "", "grillo")));
+	}
+	
+	@Test
+	void testAddDuplicated() throws DuplicateKeyException, InvalidDataException {
+		assertThrows(DuplicateKeyException.class, () -> srv.add(new Actor(1, "PENELOPEEE", "GUINESSSS")));
+	}
+	
+	@Test 
+	void testAdd() throws DuplicateKeyException, InvalidDataException {
+		var item = new Actor(0, "JIMINY", "CRICKET");
+		var rslt = srv.add(item);
+		
+		assertEquals(item.getActorId(), rslt.getActorId());
+		
+		srv.deleteById(rslt.getActorId());
 	}
 
 	@Test
-	void testAdd() {
-		fail("Not yet implemented");
+	void testModifyNull() throws NotFoundException, InvalidDataException {
+		assertThrows(InvalidDataException.class, () -> srv.modify(null));
+	}
+	
+	@Test
+	void testModifyInvalid() throws NotFoundException, InvalidDataException {
+		assertThrows(InvalidDataException.class, () -> srv.modify(new Actor(204, "", "grillo")));
+	}
+	
+	@Test
+	void testModifyEmpty() throws NotFoundException, InvalidDataException {
+		assertThrows(NotFoundException.class, () -> srv.modify(new Actor(3333, "JIMINY", "CRICKET")));
+	}
+	
+	@Test
+	void testModify() throws DuplicateKeyException, InvalidDataException, NotFoundException {
+		var item = new Actor(0, "JIMINY", "CRICKET");
+		var rslt = srv.add(item);
+		item.setLastName("GRILLO");
+		srv.modify(item);
+		
+		assertEquals("GRILLO", srv.getOne(rslt.getActorId()).get().getLastName());
+		
+		srv.deleteById(rslt.getActorId());
 	}
 
-	@Test
-	void testModify() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testDelete() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testDeleteById() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testNovedades() {
-		fail("Not yet implemented");
-	}
+		@Test
+		void testDelete() throws DuplicateKeyException, InvalidDataException {
+			var item = new Actor(0, "JIMINY", "CRICKET");
+			item.addFilm(1);
+			var rslt = srv.add(item);
+			srv.delete(rslt);
+			assertThat(srv.getOne(rslt.getActorId()).isEmpty()).isTrue();
+		}
+	
+		@Test
+		void testDeleteById() throws DuplicateKeyException, InvalidDataException {
+			var item = new Actor(0, "JIMINY", "CRICKET");
+			item.addFilm(1);
+			var rslt = srv.add(item);
+			srv.deleteById(rslt.getActorId());
+			assertThat(srv.getOne(rslt.getActorId()).isEmpty()).isTrue();
+		}
 
 }
