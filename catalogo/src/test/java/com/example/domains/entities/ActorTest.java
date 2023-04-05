@@ -2,17 +2,12 @@ package com.example.domains.entities;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 class ActorTest {
-
-	@BeforeEach
-	void setUp() throws Exception {
-	}
 	
 	@Test
 	void testIsValid() {
@@ -49,6 +44,7 @@ class ActorTest {
 		assertTrue(item.isInvalid());
 //		assertEquals(error, item.getErrorsMessage());
 	}
+	
 	@Test
 	void testAddFilm() {
 		var item = new Actor(0, "PEPITO", "GRILLO");

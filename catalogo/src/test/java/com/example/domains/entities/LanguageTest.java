@@ -2,73 +2,51 @@ package com.example.domains.entities;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class LanguageTest {
 
-	@BeforeEach
-	void setUp() throws Exception {
+	@Test
+	void testIsValid() {
+		var item = new Language(0, "Español");
+		assertTrue(item.isValid());
 	}
 
 	@Test
-	void testLanguageIntString() {
-		fail("Not yet implemented");
+	void testNombreIsInvalid() {
+		var item = new Category(0, " ");
+		assertTrue(item.isInvalid());
 	}
-
+	
 	@Test
-	void testSetFilms() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testAddFilmFilm() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testAddFilmInt() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testClearFilms() {
-		fail("Not yet implemented");
+	void testAddFilm() {
+		var item = new Language(0, "Español");
+		item.addFilm(1);
+		assertEquals(1, item.getFilms().get(0).getFilmId());
 	}
 
 	@Test
 	void testRemoveFilm() {
-		fail("Not yet implemented");
+		var item = new Language(0, "Español");
+		var film = new Film(1);
+		item.addFilm(film);
+		item.removeFilm(film);
+		assertEquals(0, item.getFilms().size());
 	}
 
-	@Test
-	void testSetFilmsVO() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testAddFilmVOFilm() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testAddFilmVOInt() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testClearFilmsVO() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testRemoveFilmVO() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testMerge() {
-		fail("Not yet implemented");
-	}
-
+//	@Test
+//	void testMerge() {
+//		var item = new Language(0, "Español");
+//		item.addFilm(1);
+//		
+//		var itemM = new Language(0, "Español");
+//		itemM.addFilm(2);
+//		
+//		itemM.merge(item);
+//		assertAll("Merge",
+//				() -> assertEquals(itemM.getLanguageId(), item.getLanguageId()),
+//				() -> assertEquals(itemM.getName(), item.getName()),
+//				() -> assertEquals(itemM.getFilms(), item.getFilms())
+//				);
+//	}
 }

@@ -41,11 +41,7 @@ public class CategoryServiceImpl implements CategoryService {
 			throw new InvalidDataException(item.getErrorsMessage(), item.getErrorsFields());
 		if(getOne(item.getCategoryId()).isPresent())
 			throw new DuplicateKeyException();
-		var films = item.getFilms();
-		item.clearFilms();
-		var newItem = dao.save(item);
-		newItem.setFilms(films);
-		return dao.save(newItem);
+		return dao.save(item);
 	}
 
 	@Override

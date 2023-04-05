@@ -11,10 +11,6 @@ import com.example.domains.entities.Actor;
 
 class ActorEditDTOTest {
 
-	@BeforeEach
-	void setUp() throws Exception {
-	}
-
 	@Test
 	void testFromActor() {
 		var actorDTO = ActorEditDTO.from(new Actor(0, "PEPITO", "GRILLO"));

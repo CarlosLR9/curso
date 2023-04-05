@@ -2,48 +2,53 @@ package com.example.domains.entities;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class CategoryTest {
 
-	@BeforeEach
-	void setUp() throws Exception {
+	@Test
+	void testIsValid() {
+		var item = new Category(0, "Animacion");
+		assertTrue(item.isValid());
 	}
 
 	@Test
-	void testCategoryIntString() {
-		fail("Not yet implemented");
+	void testNombreIsInvalid() {
+		var item = new Category(0, " ");
+		assertTrue(item.isInvalid());
 	}
-
+	
 	@Test
-	void testSetFilms() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testClearFilms() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testAddFilmFilm() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testAddFilmInt() {
-		fail("Not yet implemented");
+	void testAddFilm() {
+		var item = new Category(0, "Animacion");
+		item.addFilm(1);
+		assertEquals(1, item.getFilms().get(0).getFilmId());
 	}
 
 	@Test
 	void testRemoveFilm() {
-		fail("Not yet implemented");
+		var item = new Category(0, "Animacion");
+		var film = new Film(1);
+		item.addFilm(film);
+		item.removeFilm(film);
+		assertEquals(0, item.getFilms().size());
 	}
 
 	@Test
 	void testMerge() {
-		fail("Not yet implemented");
+		var item = new Category(0, "Animacion");
+		item.addFilm(1);
+		
+		var itemM = new Category(0, "Animacion");
+		itemM.addFilm(2);
+		
+		itemM.merge(item);
+		assertAll("Merge",
+				() -> assertEquals(itemM.getCategoryId(), item.getCategoryId()),
+				() -> assertEquals(itemM.getName(), item.getName()),
+				() -> assertEquals(itemM.getFilms(), item.getFilms())
+				);
+
 	}
 
 }

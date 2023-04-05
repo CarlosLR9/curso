@@ -41,14 +41,7 @@ public class LanguageServiceImpl implements LanguageService {
 			throw new InvalidDataException(item.getErrorsMessage());
 		if(dao.existsById(item.getLanguageId()))
 			throw new DuplicateKeyException(item.getErrorsMessage());
-		var films = item.getFilms();
-		var filmsVO = item.getFilmsVO();
-		item.clearFilms();
-		item.clearFilmsVO();
-		var newItem = dao.save(item);
-		newItem.setFilms(films);
-		newItem.setFilmsVO(filmsVO);
-		return dao.save(newItem);
+		return dao.save(item);
 	}
 
 	@Override
