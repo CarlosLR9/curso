@@ -33,12 +33,12 @@ public class Actor extends EntityBase<Actor> implements Serializable {
 	@Column(name = "first_name", nullable = false, length = 45)
 	@NotBlank
 	@Size(max = 45, min = 2)
-	@Pattern(regexp = "[A-Z]+", message = "Tiene que estar en mayusculas")
+	@Pattern(regexp = "[A-Z]+", message = "must be in capital letters")
 	private String firstName;
 
 	@Column(name = "last_name", nullable = false, length = 45)
 	@Size(max = 45, min = 2)
-	@Pattern(regexp = "[A-Z]+", message = "Tiene que estar en mayusculas")
+	@Pattern(regexp = "[A-Z]+", message = "must be in capital letters")
 	private String lastName;
 
 	@Column(name = "last_update", insertable = false, updatable = false, nullable = false)
@@ -59,8 +59,8 @@ public class Actor extends EntityBase<Actor> implements Serializable {
 	}
 
 	public Actor(int actorId, @NotBlank @Size(max = 45, min = 2) 
-			@Pattern(regexp = "[A-Z]+", message = "Tiene que estar en mayusculas") String firstName,
-			@Size(max = 45, min = 2) @Pattern(regexp = "[A-Z]+", message = "Tiene que estar en mayusculas") String lastName) {
+			@Pattern(regexp = "[A-Z]+", message = "must be in capital letters") String firstName,
+			@Size(max = 45, min = 2) @Pattern(regexp = "[A-Z]+", message = "must be in capital letters") String lastName) {
 		super();
 		this.actorId = actorId;
 		this.firstName = firstName;
