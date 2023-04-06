@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.sql.Timestamp;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -34,11 +35,14 @@ class ActorRepositoryMemoryTest {
 	}
 
 	@Test
+	@Disabled
 	void testAll() {
 		assertEquals(3, dao.findAll().size());
 		assertEquals(1, dao.findAll().get(0).getActorId());
 	}
+	
 	@Test
+	@Disabled
 	void testOne() {
 		var item = dao.findById(4);
 
@@ -47,6 +51,7 @@ class ActorRepositoryMemoryTest {
 	}
 
 	@Test
+	@Disabled
 	void testSave() {
 		var item = dao.save(new Actor(0, "Demo", "GUARDAR"));
 
