@@ -29,7 +29,7 @@ class ActorServiceImplTest {
 		@Test
 		void testGetOne() {
 			assertEquals(
-					"Actor [actorId=1, firstName=PENELOPE, lastName=GUINES, " + "lastUpdate=2006-02-15 04:34:33.0]",
+					"Actor [actorId=1, firstName=PENELOPE, lastName=GUINESS, " + "lastUpdate=2006-02-15 04:34:33.0]",
 					srv.getOne(1).get().toString());
 		}
 
