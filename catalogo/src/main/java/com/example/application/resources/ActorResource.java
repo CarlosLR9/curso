@@ -1,18 +1,12 @@
 package com.example.application.resources;
 
-import java.io.Serializable;
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
-
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Valid;
-import jakarta.validation.Validator;
-import jakarta.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.domains.contracts.services.ActorService;
-import com.example.domains.entities.dtos.ActorDTO;
+import com.example.domains.entities.dtos.ActorEditDTO;
 import com.example.domains.entities.dtos.ActorShort;
 import com.example.domains.entities.dtos.ElementoDTO;
 import com.example.exceptions.BadRequestException;
@@ -36,67 +30,63 @@ import com.example.exceptions.DuplicateKeyException;
 import com.example.exceptions.InvalidDataException;
 import com.example.exceptions.NotFoundException;
 
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 
 @RestController
-@RequestMapping("/api/actores")
+@RequestMapping(path = { "/api/actores/v1", "/api/actors" })
 public class ActorResource {
 	@Autowired
 	private ActorService srv;
 
 	@GetMapping
-	public List<ActorShort> getAll(@RequestParam(required = false) String filter) {
-		if (filter != null) {}
-		
+	public List<ActorShort> getAll(@RequestParam(required = false) String sort) {
+		if(sort != null)
+			return (List<ActorShort>)srv.getByProjection(Sort.by(sort), ActorShort.class);
 		return srv.getByProjection(ActorShort.class);
 	}
-
+	
 	@GetMapping(params = "page")
-	public Page<ActorDTO> getAll(Pageable pageable) {
-		return srv.getByProjection(pageable, ActorDTO.class);
+	public Page<ActorShort> getAll(Pageable pageable) {
+		return srv.getByProjection(pageable, ActorShort.class);
 	}
 
 	@GetMapping(path = "/{id}")
-	public ActorDTO getOne(@PathVariable int id) throws NotFoundException {
+	public ActorEditDTO getOne(@PathVariable int id) throws NotFoundException {
 		var item = srv.getOne(id);
 		if(item.isEmpty())
 			throw new NotFoundException();
-		return ActorDTO.from(item.get());
+		return ActorEditDTO.from(item.get());
 	}
 	
 	@GetMapping(path = "/{id}/pelis")
+	@Transactional
 	public List<ElementoDTO<Integer, String>> getPelis(@PathVariable int id) throws NotFoundException {
-		return srv.getOne(id).get().getFilmActors().stream()
-				.map(f-> new ElementoDTO<>(f.getFilm().getFilmId(), f.getFilm().getTitle()))
-				.toList();
-	}
-
-	@GetMapping(path = "/{id}/peliculas")
-	public List<Map<String, String>> getPeliculas(@PathVariable int id) throws NotFoundException {
-		return srv.getOne(id).get().getFilmActors().stream()
-				.map(f-> Map.of("id", Integer.toString(f.getFilm().getFilmId()), "titulo", f.getFilm().getTitle()))
+		var item = srv.getOne(id);
+		if(item.isEmpty())
+			throw new NotFoundException();
+		return item.get().getFilms().stream()
+				.map(o -> new ElementoDTO<>(o.getFilmId(), o.getTitle()))
 				.toList();
 	}
 	
 	@PostMapping
-	public ResponseEntity<Object> create(@Valid @RequestBody ActorDTO item) throws BadRequestException, DuplicateKeyException, InvalidDataException {
-		var newItem = srv.add(ActorDTO.from(item));
+	public ResponseEntity<Object> create(@Valid @RequestBody ActorEditDTO item) throws BadRequestException, DuplicateKeyException, InvalidDataException {
+		var newItem = srv.add(ActorEditDTO.from(item));
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 			.buildAndExpand(newItem.getActorId()).toUri();
 		return ResponseEntity.created(location).build();
-	}
-	@PostMapping("/premios")
-	public String darPremio(@RequestParam String premio) throws BadRequestException, DuplicateKeyException, InvalidDataException {
-		//srv.darPremios(null);
-		return "He dado el premio " + premio;
+
 	}
 
 	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void update(@PathVariable int id, @Valid @RequestBody ActorDTO item) throws BadRequestException, NotFoundException, InvalidDataException {
+	public void update(@PathVariable int id, @Valid @RequestBody ActorEditDTO item) throws BadRequestException, NotFoundException, InvalidDataException {
 		if(id != item.getActorId())
 			throw new BadRequestException("No coinciden los identificadores");
-		srv.modify(ActorDTO.from(item));
+		srv.modify(ActorEditDTO.from(item));
 	}
 
 	@DeleteMapping("/{id}")
@@ -104,7 +94,5 @@ public class ActorResource {
 	public void delete(@PathVariable int id) {
 		srv.deleteById(id);
 	}
-	
-	
-}
 
+}
