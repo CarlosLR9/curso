@@ -36,13 +36,13 @@ import lombok.Value;
 class ActorResourceTest {
 	@Autowired
     private MockMvc mockMvc;
-
+	
 	@MockBean
 	private ActorService srv;
 
 	@Autowired
 	ObjectMapper objectMapper;
-
+	
 	@BeforeEach
 	void setUp() throws Exception {
 	}
@@ -50,13 +50,13 @@ class ActorResourceTest {
 	@AfterEach
 	void tearDown() throws Exception {
 	}
-
+	
 	@Value
 	static class ActorShortMock implements ActorShort {
 		int actorId;
 		String nombre;
 	}
-
+	
 	@Test
 	void testGetAllString() throws Exception {
 		List<ActorShort> lista = new ArrayList<>(
@@ -80,12 +80,12 @@ class ActorResourceTest {
 
 	@Test
 	void testGetAllPageable() throws Exception {
-		List<ActorEditDTO> lista = new ArrayList<>(
-		        Arrays.asList(new ActorEditDTO(1, "Pepito", "Grillo", new ArrayList<Integer>()),
-		        		new ActorEditDTO(2, "Carmelo", "Coton", new ArrayList<Integer>()),
-		        		new ActorEditDTO(3, "Capitan", "Tan", new ArrayList<Integer>())));
+		List<ActorShort> lista = new ArrayList<>(
+		        Arrays.asList(new ActorShortMock(1, "Pepito Grillo"),
+		        		new ActorShortMock(2, "Carmelo Coton"),
+		        		new ActorShortMock(3, "Capitan Tan")));
 
-		when(srv.getByProjection(PageRequest.of(0, 20), ActorEditDTO.class))
+		when(srv.getByProjection(PageRequest.of(0, 20), ActorShort.class))
 			.thenReturn(new PageImpl<>(lista));
 		mockMvc.perform(get("/api/actores/v1").queryParam("page", "0"))
 			.andExpectAll(
@@ -115,7 +115,7 @@ class ActorResourceTest {
 		when(srv.getOne(id)).thenReturn(Optional.empty());
 		mockMvc.perform(get("/api/actores/v1/{id}", id))
 			.andExpect(status().isNotFound())
-			.andExpect(jsonPath("$.error").value("Not found"))
+			.andExpect(jsonPath("$.title").value("Not Found"))
 	        .andDo(print());
 	}
 
