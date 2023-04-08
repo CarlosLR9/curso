@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,6 +27,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.example.domains.contracts.services.ActorService;
 import com.example.domains.entities.Actor;
+import com.example.domains.entities.Film;
+import com.example.domains.entities.Language;
+import com.example.domains.entities.Film.Rating;
 import com.example.domains.entities.dtos.ActorEditDTO;
 import com.example.domains.entities.dtos.ActorShort;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -71,12 +75,6 @@ class ActorResourceTest {
 					content().contentType("application/json"),
 					jsonPath("$.size()").value(3)
 					);
-//		mvc.perform(get("/api/v1/actores").accept(MediaType.APPLICATION_XML))
-//			.andExpectAll(
-//					status().isOk(), 
-//					content().contentType("application/xml"),
-//					xPath("$.size()").value(3)
-//					);
 	}
 
 	@Test
@@ -122,8 +120,23 @@ class ActorResourceTest {
 	}
 	
 	@Test
-	void testGetPelis() {
-		fail("Not yet implemented");
+	void testGetPelis() throws Exception {
+		int id = 1;
+		var ele = new Actor(id, "Pepito", "Grillo");
+		ele.addFilm(new Film(1, "Pinocho", "Un anciano llamado Geppetto fabrica una marioneta de madera a la que llama Pinocho", 
+				(short) 1940, new Language(1), new Language(2), (byte) 2, new BigDecimal(2), 
+				80, new BigDecimal(20), Rating.GENERAL_AUDIENCES));
+		ele.addFilm(new Film(2, "Dumbo", "Un elefante con orejas grandes", 
+				(short) 1940, new Language(1), new Language(2), (byte) 2, new BigDecimal(2), 
+				80, new BigDecimal(20), Rating.GENERAL_AUDIENCES));
+		when(srv.getOne(id)).thenReturn(Optional.of(ele));
+		mockMvc.perform(get("/api/actores/v1/{id}/pelis", id).accept(MediaType.APPLICATION_JSON))
+			.andExpectAll(
+				status().isOk(), 
+				content().contentType("application/json"),
+				jsonPath("$.size()").value(2)
+				)
+			.andDo(print());
 	}
 
 	@Test
