@@ -25,12 +25,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.example.application.resources.ActorResourceTest.ActorShortMock;
 import com.example.domains.contracts.services.CategoryService;
-import com.example.domains.entities.Actor;
 import com.example.domains.entities.Category;
-import com.example.domains.entities.dtos.ActorEditDTO;
-import com.example.domains.entities.dtos.ActorShort;
 import com.example.domains.entities.dtos.CategoryEditDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

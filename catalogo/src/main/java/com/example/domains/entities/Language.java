@@ -56,7 +56,7 @@ public class Language extends EntityBase<Language> implements Serializable {
 	//bi-directional many-to-one association to Film
 	@OneToMany(mappedBy="languageVO")
 	@JsonIgnore
-	private List<Film> filmsVO;
+	private List<Film> filmsVO = new ArrayList<Film>();
 
 	public Language() {
 	}
