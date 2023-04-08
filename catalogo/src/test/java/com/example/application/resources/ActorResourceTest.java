@@ -28,6 +28,7 @@ import com.example.domains.contracts.services.ActorService;
 import com.example.domains.entities.Actor;
 import com.example.domains.entities.dtos.ActorEditDTO;
 import com.example.domains.entities.dtos.ActorShort;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.Value;
@@ -108,6 +109,7 @@ class ActorResourceTest {
 	        .andExpect(jsonPath("$.apellidos").value(ele.getLastName()))
 	        .andDo(print());
 	}
+	
 	@Test
 	void testGetOne404() throws Exception {
 		int id = 1;
@@ -134,14 +136,60 @@ class ActorResourceTest {
 	        ;
 	}
 
-//	@Test
-//	void testUpdate() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	void testDelete() {
-//		fail("Not yet implemented");
-//	}
+	@Test
+	void testUpdate() throws Exception {
+		int id = 1;
+		var ele = new Actor(id, "Pepito", "Grillo");
+		when(srv.add(ele)).thenReturn(ele);
+		ele.setFirstName("Jiminy");
+		when(srv.modify(ele)).thenReturn(ele);
+		mockMvc.perform(put("/api/actores/v1//{id}", id)
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(objectMapper.writeValueAsString(ActorEditDTO.from(ele)))
+			)
+			.andExpect(status().isNoContent())
+	        .andDo(print())
+	        ;
+	}
+	
+	@Test
+	void testUpdate404() throws Exception {
+		int id = 1;
+		var ele = new Actor(id, "Pepito", "Grillo");
+		when(srv.add(ele)).thenReturn(ele);
+		ele.setFirstName("Jiminy");
+		when(srv.modify(ele)).thenReturn(null);
+		mockMvc.perform(get("/api/actores/v1/{id}", id))
+			.andExpect(status().isNotFound())
+			.andExpect(jsonPath("$.title").value("Not Found"))
+	        .andDo(print());
+	}
 
+	@Test
+	void testDelete() throws Exception {
+		int id = 1;
+		var ele = new Actor(id, "Pepito", "Grillo");
+		when(srv.add(ele)).thenReturn(ele);
+//		srv.deleteById(ele.getActorId());
+		mockMvc.perform(delete("/api/actores/v1//{id}", id)
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(objectMapper.writeValueAsString(srv.getOne(1)))
+			)
+			.andExpect(status().isNoContent())
+	        .andDo(print())
+	        ;
+	}
+	
+	@Test
+	void testDelete404() throws Exception {
+		int id = 1;
+		var ele = new Actor(id, "Pepito", "Grillo");
+		srv.deleteById(null);
+		mockMvc.perform(get("/api/actores/v1/{id}", id))
+		.andExpect(status().isNotFound())
+		.andExpect(jsonPath("$.title").value("Not Found"))
+        .andDo(print());
+	}
+	
 }
+
