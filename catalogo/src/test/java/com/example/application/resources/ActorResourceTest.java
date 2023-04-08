@@ -120,6 +120,11 @@ class ActorResourceTest {
 			.andExpect(jsonPath("$.title").value("Not Found"))
 	        .andDo(print());
 	}
+	
+	@Test
+	void testGetPelis() {
+		fail("Not yet implemented");
+	}
 
 	@Test
 	void testCreate() throws Exception {
