@@ -29,9 +29,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.example.domains.contracts.services.FilmService;
+import com.example.domains.entities.Actor;
+import com.example.domains.entities.Category;
 import com.example.domains.entities.Film;
-import com.example.domains.entities.Language;
 import com.example.domains.entities.Film.Rating;
+import com.example.domains.entities.Language;
 import com.example.domains.entities.dtos.FilmEditDTO;
 import com.example.domains.entities.dtos.FilmShort;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -119,13 +121,39 @@ class FilmResourceTest {
 	}
 	
 	@Test
-	void testGetActores() {
-		fail("Not yet implemented");
+	void testGetActores() throws Exception {
+		int id = 1;
+		var ele = new Film(id, "Pinocho", "Un anciano llamado Geppetto fabrica una marioneta de madera a la que llama Pinocho", 
+				(short) 1940, new Language(1), new Language(2), (byte) 2, new BigDecimal(2), 
+				80, new BigDecimal(20), Rating.GENERAL_AUDIENCES);
+		ele.addActor(new Actor(1, "Pepito", "Grillo"));
+		ele.addActor(new Actor(2, "Jiminy", "Cricket"));
+		when(srv.getOne(id)).thenReturn(Optional.of(ele));
+		mockMvc.perform(get("/api/pelis/v1/{id}/actores", id).accept(MediaType.APPLICATION_JSON))
+			.andExpectAll(
+				status().isOk(), 
+				content().contentType("application/json"),
+				jsonPath("$.size()").value(2)
+				)
+			.andDo(print());
 	}
 	
 	@Test
-	void testGetCategorias() {
-		fail("Not yet implemented");
+	void testGetCategorias() throws Exception {
+		int id = 1;
+		var ele = new Film(id, "Pinocho", "Un anciano llamado Geppetto fabrica una marioneta de madera a la que llama Pinocho", 
+				(short) 1940, new Language(1), new Language(2), (byte) 2, new BigDecimal(2), 
+				80, new BigDecimal(20), Rating.GENERAL_AUDIENCES);
+		ele.addCategory(new Category(1, "Animacion"));
+		ele.addCategory(new Category(2, "Drama"));
+		when(srv.getOne(id)).thenReturn(Optional.of(ele));
+		mockMvc.perform(get("/api/pelis/v1/{id}/categorias", id).accept(MediaType.APPLICATION_JSON))
+			.andExpectAll(
+				status().isOk(), 
+				content().contentType("application/json"),
+				jsonPath("$.size()").value(2)
+				)
+			.andDo(print());
 	}
 
 	@Test

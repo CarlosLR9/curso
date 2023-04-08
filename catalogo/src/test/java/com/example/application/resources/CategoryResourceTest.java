@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.example.domains.contracts.services.CategoryService;
 import com.example.domains.entities.Category;
+import com.example.domains.entities.Film;
 import com.example.domains.entities.dtos.CategoryEditDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -84,8 +85,19 @@ class CategoryResourceTest {
 	}
 
 	@Test
-	void testGetPelis() {
-		fail("Not yet implemented");
+	void testGetPelis() throws Exception {
+		int id = 1;
+		var ele = new Category(id, "Animacion");
+		ele.addFilm(new Film(1));
+		ele.addFilm(new Film(2));
+		when(srv.getOne(id)).thenReturn(Optional.of(ele));
+		mockMvc.perform(get("/api/categorias/v1/{id}/pelis", id).accept(MediaType.APPLICATION_JSON))
+			.andExpectAll(
+				status().isOk(), 
+				content().contentType("application/json"),
+				jsonPath("$.size()").value(2)
+				)
+			.andDo(print());
 	}
 
 	@Test

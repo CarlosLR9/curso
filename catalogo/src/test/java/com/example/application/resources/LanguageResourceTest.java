@@ -26,6 +26,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.example.domains.contracts.services.LanguageService;
+import com.example.domains.entities.Film;
 import com.example.domains.entities.Language;
 import com.example.domains.entities.dtos.LanguageEditDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -84,13 +85,35 @@ class LanguageResourceTest {
 	}
 
 	@Test
-	void testGetPelis() {
-		fail("Not yet implemented");
+	void testGetPelis() throws Exception {
+		int id = 1;
+		var ele = new Language(id, "Español");
+		ele.addFilm(new Film(1));
+		ele.addFilm(new Film(2));
+		when(srv.getOne(id)).thenReturn(Optional.of(ele));
+		mockMvc.perform(get("/api/lenguajes/v1/{id}/pelis", id).accept(MediaType.APPLICATION_JSON))
+			.andExpectAll(
+				status().isOk(), 
+				content().contentType("application/json"),
+				jsonPath("$.size()").value(2)
+				)
+			.andDo(print());
 	}
 	
 	@Test
-	void testGetPelisVO() {
-		fail("Not yet implemented");
+	void testGetPelisVO() throws Exception {
+		int id = 1;
+		var ele = new Language(id, "Español");
+		ele.addFilmVO(new Film(1));
+		ele.addFilmVO(new Film(2));
+		when(srv.getOne(id)).thenReturn(Optional.of(ele));
+		mockMvc.perform(get("/api/lenguajes/v1/{id}/pelis/vo", id).accept(MediaType.APPLICATION_JSON))
+			.andExpectAll(
+				status().isOk(), 
+				content().contentType("application/json"),
+				jsonPath("$.size()").value(2)
+				)
+			.andDo(print());
 	}
 
 	@Test
