@@ -30,7 +30,7 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping(path = { "/api/lenguages/v1", "/api/languages" })
+@RequestMapping(path = { "/api/lenguajes/v1", "/api/languages" })
 public class LanguageResource {
 	@Autowired
 	private LanguageService srv;
