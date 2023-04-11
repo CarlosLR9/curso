@@ -48,35 +48,35 @@ public class CategoryResource {
 	@GetMapping(path = "/{id}")
 	public CategoryEditDTO getOne(@PathVariable int id) throws NotFoundException {
 		var item = srv.getOne(id);
-		if(item.isEmpty())
+		if (item.isEmpty())
 			throw new NotFoundException();
 		return CategoryEditDTO.from(item.get());
 	}
-	
+
 	@GetMapping(path = "/{id}/pelis")
 	@Transactional
 	public List<ElementoDTO<Integer, String>> getPelis(@PathVariable int id) throws NotFoundException {
 		var item = srv.getOne(id);
-		if(item.isEmpty())
+		if (item.isEmpty())
 			throw new NotFoundException();
-		return item.get().getFilms().stream()
-				.map(o -> new ElementoDTO<>(o.getFilmId(), o.getTitle()))
-				.toList();
+		return item.get().getFilms().stream().map(o -> new ElementoDTO<>(o.getFilmId(), o.getTitle())).toList();
 	}
-	
+
 	@PostMapping
-	public ResponseEntity<Object> create(@Valid @RequestBody CategoryEditDTO item) throws BadRequestException, DuplicateKeyException, InvalidDataException {
+	public ResponseEntity<Object> create(@Valid @RequestBody CategoryEditDTO item)
+			throws BadRequestException, DuplicateKeyException, InvalidDataException {
 		var newItem = srv.add(CategoryEditDTO.from(item));
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-			.buildAndExpand(newItem.getCategoryId()).toUri();
+				.buildAndExpand(newItem.getCategoryId()).toUri();
 		return ResponseEntity.created(location).build();
 
 	}
 
 	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void update(@PathVariable int id, @Valid @RequestBody CategoryEditDTO item) throws BadRequestException, NotFoundException, InvalidDataException {
-		if(id != item.getCategoryId())
+	public void update(@PathVariable int id, @Valid @RequestBody CategoryEditDTO item)
+			throws BadRequestException, NotFoundException, InvalidDataException {
+		if (id != item.getCategoryId())
 			throw new BadRequestException("No coinciden los identificadores");
 		srv.modify(CategoryEditDTO.from(item));
 	}

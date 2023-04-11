@@ -6,32 +6,31 @@ import jakarta.validation.constraints.NotNull;
 
 import java.sql.Timestamp;
 
-
 /**
  * The persistent class for the film_actor database table.
  * 
  */
 @Entity
-@Table(name="film_actor")
-@NamedQuery(name="FilmActor.findAll", query="SELECT f FROM FilmActor f")
+@Table(name = "film_actor")
+@NamedQuery(name = "FilmActor.findAll", query = "SELECT f FROM FilmActor f")
 public class FilmActor implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@EmbeddedId
 	private FilmActorPK id;
 
-	@Column(name="last_update", insertable = false, updatable = false)
+	@Column(name = "last_update", insertable = false, updatable = false)
 	private Timestamp lastUpdate;
 
-	//bi-directional many-to-one association to Actor
+	// bi-directional many-to-one association to Actor
 	@ManyToOne
-	@JoinColumn(name="actor_id", insertable=false, updatable=false)
+	@JoinColumn(name = "actor_id", insertable = false, updatable = false)
 	@NotNull
 	private Actor actor;
 
-	//bi-directional many-to-one association to Film
+	// bi-directional many-to-one association to Film
 	@ManyToOne
-	@JoinColumn(name="film_id", insertable=false, updatable=false)
+	@JoinColumn(name = "film_id", insertable = false, updatable = false)
 	@NotNull
 	private Film film;
 

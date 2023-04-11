@@ -175,17 +175,25 @@ public class Film extends EntityBase<Film> implements Serializable {
 		this.rating = rating;
 	}
 
-	public Film(@NotBlank @Size(max = 128) String title, @NotNull Language language, @Positive Byte rentalDuration,
+	public Film(int filmId, @NotBlank @Size(max = 128) String title, @NotNull Language language,
+			@Positive Byte rentalDuration,
 			@Positive @DecimalMin(value = "0.0", inclusive = false) @Digits(integer = 2, fraction = 2) BigDecimal rentalRate,
 			@Positive int length,
 			@DecimalMin(value = "0.0", inclusive = false) @Digits(integer = 3, fraction = 2) BigDecimal replacementCost) {
 		super();
+		this.filmId = filmId;
 		this.title = title;
 		this.language = language;
 		this.rentalDuration = rentalDuration;
 		this.rentalRate = rentalRate;
 		this.length = length;
 		this.replacementCost = replacementCost;
+	}
+
+	public Film(int filmId, @NotBlank @Size(max = 128) String title) {
+		super();
+		this.filmId = filmId;
+		this.title = title;
 	}
 
 	public int getFilmId() {
@@ -285,7 +293,7 @@ public class Film extends EntityBase<Film> implements Serializable {
 	public void setLanguage(Language language) {
 		this.language = language;
 	}
-	
+
 	public void setLanguage(int languageId) {
 		setLanguage(new Language(languageId));
 	}
@@ -297,7 +305,7 @@ public class Film extends EntityBase<Film> implements Serializable {
 	public void setLanguageVO(Language languageVO) {
 		this.languageVO = languageVO;
 	}
-	
+
 	public void setLanguageVO(int languageId) {
 		setLanguageVO(new Language(languageId));
 	}
@@ -382,7 +390,7 @@ public class Film extends EntityBase<Film> implements Serializable {
 		Film other = (Film) obj;
 		return filmId == other.filmId;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Film [filmId=" + filmId + ", description=" + description + ", lastUpdate=" + lastUpdate + ", length="

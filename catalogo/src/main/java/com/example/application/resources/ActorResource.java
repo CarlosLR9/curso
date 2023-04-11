@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,11 +42,11 @@ public class ActorResource {
 
 	@GetMapping
 	public List<ActorShort> getAll(@RequestParam(required = false) String sort) {
-		if(sort != null)
-			return (List<ActorShort>)srv.getByProjection(Sort.by(sort), ActorShort.class);
+		if (sort != null)
+			return (List<ActorShort>) srv.getByProjection(Sort.by(sort), ActorShort.class);
 		return srv.getByProjection(ActorShort.class);
 	}
-	
+
 	@GetMapping(params = "page")
 	public Page<ActorShort> getAll(Pageable pageable) {
 		return srv.getByProjection(pageable, ActorShort.class);
@@ -56,35 +55,35 @@ public class ActorResource {
 	@GetMapping(path = "/{id}")
 	public ActorEditDTO getOne(@PathVariable int id) throws NotFoundException {
 		var item = srv.getOne(id);
-		if(item.isEmpty())
+		if (item.isEmpty())
 			throw new NotFoundException();
 		return ActorEditDTO.from(item.get());
 	}
-	
+
 	@GetMapping(path = "/{id}/pelis")
 	@Transactional
 	public List<ElementoDTO<Integer, String>> getPelis(@PathVariable int id) throws NotFoundException {
 		var item = srv.getOne(id);
-		if(item.isEmpty())
+		if (item.isEmpty())
 			throw new NotFoundException();
-		return item.get().getFilms().stream()
-				.map(o -> new ElementoDTO<>(o.getFilmId(), o.getTitle()))
-				.toList();
+		return item.get().getFilms().stream().map(o -> new ElementoDTO<>(o.getFilmId(), o.getTitle())).toList();
 	}
-	
+
 	@PostMapping
-	public ResponseEntity<Object> create(@Valid @RequestBody ActorEditDTO item) throws BadRequestException, DuplicateKeyException, InvalidDataException {
+	public ResponseEntity<Object> create(@Valid @RequestBody ActorEditDTO item)
+			throws BadRequestException, DuplicateKeyException, InvalidDataException {
 		var newItem = srv.add(ActorEditDTO.from(item));
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-			.buildAndExpand(newItem.getActorId()).toUri();
+				.buildAndExpand(newItem.getActorId()).toUri();
 		return ResponseEntity.created(location).build();
 
 	}
 
 	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void update(@PathVariable int id, @Valid @RequestBody ActorEditDTO item) throws BadRequestException, NotFoundException, InvalidDataException {
-		if(id != item.getActorId())
+	public void update(@PathVariable int id, @Valid @RequestBody ActorEditDTO item)
+			throws BadRequestException, NotFoundException, InvalidDataException {
+		if (id != item.getActorId())
 			throw new BadRequestException("No coinciden los identificadores");
 		srv.modify(ActorEditDTO.from(item));
 	}

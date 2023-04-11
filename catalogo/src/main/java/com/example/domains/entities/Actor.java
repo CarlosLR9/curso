@@ -58,8 +58,8 @@ public class Actor extends EntityBase<Actor> implements Serializable {
 		this.actorId = actorId;
 	}
 
-	public Actor(int actorId, @NotBlank @Size(max = 45, min = 2) 
-			@Pattern(regexp = "[A-Z]+", message = "must be in capital letters") String firstName,
+	public Actor(int actorId,
+			@NotBlank @Size(max = 45, min = 2) @Pattern(regexp = "[A-Z]+", message = "must be in capital letters") String firstName,
 			@Size(max = 45, min = 2) @Pattern(regexp = "[A-Z]+", message = "must be in capital letters") String lastName) {
 		super();
 		this.actorId = actorId;
@@ -73,6 +73,11 @@ public class Actor extends EntityBase<Actor> implements Serializable {
 
 	public void setActorId(int actorId) {
 		this.actorId = actorId;
+		if (filmActors != null && filmActors.size() > 0)
+			filmActors.forEach(item -> {
+				if (item.getId().getActorId() != actorId)
+					item.getId().setActorId(actorId);
+			});
 	}
 
 	public String getFirstName() {
@@ -98,34 +103,34 @@ public class Actor extends EntityBase<Actor> implements Serializable {
 	public void setLastUpdate(Timestamp lastUpdate) {
 		this.lastUpdate = lastUpdate;
 	}
-	
+
 	// Gestion de films
 
 	public List<Film> getFilms() {
 		return this.filmActors.stream().map(item -> item.getFilm()).toList();
 	}
-	
+
 	public void setFilms(List<Film> source) {
 		if (filmActors == null || !filmActors.isEmpty())
 			clearFilms();
 		source.forEach(item -> addFilm(item));
 	}
-	
+
 	public void clearFilms() {
 		filmActors = new ArrayList<FilmActor>();
 	}
 
-	public void addFilm(Film film) {
-		FilmActor filmActor = new FilmActor(film, this);
+	public void addFilm(Film item) {
+		FilmActor filmActor = new FilmActor(item, this);
 		filmActors.add(filmActor);
 	}
 
-	public void addFilm(int filmId) {
-		addFilm(new Film(filmId));
+	public void addFilm(int id) {
+		addFilm(new Film(id));
 	}
-	
-	public void removeFilm(Film film) {
-		var filmActor = filmActors.stream().filter(item -> item.getFilm().equals(film)).findFirst();
+
+	public void removeFilm(Film ele) {
+		var filmActor = filmActors.stream().filter(item -> item.getFilm().equals(ele)).findFirst();
 		if (filmActor.isEmpty())
 			return;
 		filmActors.remove(filmActor.get());
@@ -153,7 +158,7 @@ public class Actor extends EntityBase<Actor> implements Serializable {
 		return "Actor [actorId=" + actorId + ", firstName=" + firstName + ", lastName=" + lastName + ", lastUpdate="
 				+ lastUpdate + "]";
 	}
-	
+
 	public Actor merge(Actor target) {
 		target.firstName = firstName;
 		target.lastName = lastName;
@@ -161,7 +166,8 @@ public class Actor extends EntityBase<Actor> implements Serializable {
 		target.getFilms().stream().filter(item -> !getFilms().contains(item))
 				.forEach(item -> target.removeFilm(item));
 		// Añade las peliculas que faltan
-		getFilms().stream().filter(item -> !target.getFilms().contains(item)).forEach(item -> target.addFilm(item));
+		getFilms().stream().filter(item -> !target.getFilms().contains(item))
+				.forEach(item -> target.addFilm(item));
 		return target;
 	}
 

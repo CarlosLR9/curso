@@ -16,45 +16,48 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
 /**
  * The persistent class for the language database table.
  * 
  */
 @Entity
-@Table(name="language")
-@NamedQuery(name="Language.findAll", query="SELECT l FROM Language l")
+@Table(name = "language")
+@NamedQuery(name = "Language.findAll", query = "SELECT l FROM Language l")
 public class Language extends EntityBase<Language> implements Serializable {
 	private static final long serialVersionUID = 1L;
-    public static class Partial {}
-    public static class Complete extends Partial {}
+
+	public static class Partial {
+	}
+
+	public static class Complete extends Partial {
+	}
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="language_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "language_id")
 	@JsonProperty("id")
 	@JsonView(Language.Partial.class)
 	private int languageId;
 
 	@NotBlank
-	@Size(max=20)
+	@Size(max = 20)
 	@JsonProperty("idioma")
 	@JsonView(Language.Partial.class)
 	private String name;
 
-	@Column(name="last_update", insertable = false, updatable = false)
+	@Column(name = "last_update", insertable = false, updatable = false)
 	@JsonView(Language.Complete.class)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
 	@JsonProperty("ultimaModificacion")
 	private Timestamp lastUpdate;
 
-	//bi-directional many-to-one association to Film
-	@OneToMany(mappedBy="language")
+	// bi-directional many-to-one association to Film
+	@OneToMany(mappedBy = "language")
 	@JsonIgnore
 	private List<Film> films = new ArrayList<Film>();
 
-	//bi-directional many-to-one association to Film
-	@OneToMany(mappedBy="languageVO")
+	// bi-directional many-to-one association to Film
+	@OneToMany(mappedBy = "languageVO")
 	@JsonIgnore
 	private List<Film> filmsVO = new ArrayList<Film>();
 
@@ -113,7 +116,7 @@ public class Language extends EntityBase<Language> implements Serializable {
 	public void addFilm(int filmId) {
 		addFilm(new Film(filmId));
 	}
-	
+
 	public void clearFilms() {
 		films = new ArrayList<Film>();
 	}
@@ -139,11 +142,11 @@ public class Language extends EntityBase<Language> implements Serializable {
 
 		return filmsVO;
 	}
-	
+
 	public void addFilmVO(int filmId) {
 		addFilmVO(new Film(filmId));
 	}
-	
+
 	public void clearFilmsVO() {
 		filmsVO = new ArrayList<Film>();
 	}
@@ -171,24 +174,30 @@ public class Language extends EntityBase<Language> implements Serializable {
 		Language other = (Language) obj;
 		return languageId == other.languageId;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Language [languageId=" + languageId + ", name=" + name + "]";
 	}
-	
+
 	public Language merge(Language target) {
 		target.name = name;
 		// Borra las peliculas que sobran
 		target.getFilms().stream().filter(item -> !getFilms().contains(item))
 				.forEach(item -> target.removeFilm(item));
-		if(target.getFilmsVO() != null)
-			target.getFilmsVO().stream().filter(item -> !getFilmsVO().contains(item))
-			.forEach(item -> target.removeFilmVO(item));
 		// Añade las peliculas que faltan
-		getFilms().stream().filter(item -> !target.getFilms().contains(item)).forEach(item -> target.addFilm(item));
-		if(getFilmsVO() != null)
-			getFilmsVO().stream().filter(item -> !target.getFilmsVO().contains(item)).forEach(item -> target.addFilmVO(item));
+		getFilms().stream().filter(item -> !target.getFilms().contains(item))
+				.forEach(item -> target.addFilm(item));
+		System.out.println(target.getFilmsVO());
+		if (target.getFilmsVO() != null) {
+			// Borra las peliculas en vo que sobran
+			target.getFilmsVO().stream().filter(item -> !getFilmsVO().contains(item))
+					.forEach(item -> target.removeFilmVO(item));
+			// Añade las peliculas en vo que faltan
+			getFilmsVO().stream().filter(item -> !target.getFilmsVO().contains(item))
+					.forEach(item -> target.addFilmVO(item));
+		}
+		
 		return target;
 	}
 

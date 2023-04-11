@@ -39,7 +39,7 @@ class CategoryTest {
 		var item = new Category(0, "Animacion");
 		item.addFilm(1);
 		
-		var itemM = new Category(0, "Animacion");
+		var itemM = new Category(0, "Animation");
 		itemM.addFilm(2);
 		
 		itemM.merge(item);
