@@ -38,9 +38,11 @@ class LanguageTest {
 	void testMerge() {
 		var item = new Language(0, "Español");
 		item.addFilm(1);
+		item.addFilmVO(3);
 		
 		var itemM = new Language(0, "Spain");
 		itemM.addFilm(2);
+		itemM.addFilmVO(4);
 		
 		itemM.merge(item);
 		assertAll("Merge",

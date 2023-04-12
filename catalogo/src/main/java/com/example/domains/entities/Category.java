@@ -147,10 +147,10 @@ public class Category extends EntityBase<Category> implements Serializable {
 		target.name = name;
 		// Borra las peliculas que sobran
 		target.getFilms().stream().filter(item -> !getFilms().contains(item))
-			.forEach(item -> target.removeFilm(item));
+				.forEach(item -> target.removeFilm(item));
 		// Añade las peliculas que faltan
 		getFilms().stream().filter(item -> !target.getFilms().contains(item))
-			.forEach(item -> target.addFilm(item));
+				.forEach(item -> target.addFilm(item));
 		return target;
 	}
 

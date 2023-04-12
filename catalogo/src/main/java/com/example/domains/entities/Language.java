@@ -2,6 +2,7 @@ package com.example.domains.entities;
 
 import java.io.Serializable;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -180,18 +181,19 @@ public class Language extends EntityBase<Language> implements Serializable {
 		return "Language [languageId=" + languageId + ", name=" + name + "]";
 	}
 
+	@Transactional
 	public Language merge(Language target) {
 		target.name = name;
 		// Borra las peliculas que sobran
-		target.getFilms().stream().filter(item -> !getFilms().contains(item))
+		target.getFilms().stream().filter(item -> !getFilms().contains(item)).toList()
 				.forEach(item -> target.removeFilm(item));
 		// Añade las peliculas que faltan
 		getFilms().stream().filter(item -> !target.getFilms().contains(item))
 				.forEach(item -> target.addFilm(item));
-		System.out.println(target.getFilmsVO());
+		
 		if (target.getFilmsVO() != null) {
 			// Borra las peliculas en vo que sobran
-			target.getFilmsVO().stream().filter(item -> !getFilmsVO().contains(item))
+			target.getFilmsVO().stream().filter(item -> !getFilmsVO().contains(item)).toList()
 					.forEach(item -> target.removeFilmVO(item));
 			// Añade las peliculas en vo que faltan
 			getFilmsVO().stream().filter(item -> !target.getFilmsVO().contains(item))
