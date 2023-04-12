@@ -191,14 +191,12 @@ public class Language extends EntityBase<Language> implements Serializable {
 		getFilms().stream().filter(item -> !target.getFilms().contains(item))
 				.forEach(item -> target.addFilm(item));
 		
-		if (target.getFilmsVO() != null) {
-			// Borra las peliculas en vo que sobran
-			target.getFilmsVO().stream().filter(item -> !getFilmsVO().contains(item)).toList()
-					.forEach(item -> target.removeFilmVO(item));
-			// Añade las peliculas en vo que faltan
-			getFilmsVO().stream().filter(item -> !target.getFilmsVO().contains(item))
-					.forEach(item -> target.addFilmVO(item));
-		}
+		// Borra las peliculas en vo que sobran
+		target.getFilmsVO().stream().filter(item -> !getFilmsVO().contains(item)).toList()
+				.forEach(item -> target.removeFilmVO(item));
+		// Añade las peliculas en vo que faltan
+		getFilmsVO().stream().filter(item -> !target.getFilmsVO().contains(item))
+				.forEach(item -> target.addFilmVO(item));
 		
 		return target;
 	}

@@ -414,11 +414,12 @@ public class Film extends EntityBase<Film> implements Serializable {
 		target.getActors().stream().filter(item -> !getActors().contains(item))
 				.forEach(item -> target.removeActor(item));
 		// Añade los actores que faltan
-		getActors().stream().filter(item -> !target.getActors().contains(item)).forEach(item -> target.addActor(item));
-		// Añade los categorias que faltan
+		getActors().stream().filter(item -> !target.getActors().contains(item))
+				.forEach(item -> target.addActor(item));
+		// Borra las categorias que sobran
 		target.getCategories().stream().filter(item -> !getCategories().contains(item))
 				.forEach(item -> target.removeCategory(item));
-		// Borra los categorias que sobran
+		// Añade las categorias que faltan
 		getCategories().stream().filter(item -> !target.getCategories().contains(item))
 				.forEach(item -> target.addCategory(item));
 		return target;
