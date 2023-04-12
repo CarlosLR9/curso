@@ -18,7 +18,7 @@ class CatalogoServiceImplTest {
 
 	@Autowired
 	CatalogoService catalogoSrv;
-	
+
 	@BeforeEach
 	void setUp() throws Exception {
 	}
@@ -26,8 +26,9 @@ class CatalogoServiceImplTest {
 	@Test
 	@Disabled
 	void test() {
-		assertEquals("NovedadesDTO(films=[], actors=[ActorEditDTO(actorId=204, firstName=PEPITO, lastName=GRILLO, films=[])], categories=[], languages=[])"
-				, catalogoSrv.novedades(Timestamp.valueOf("2019-01-01 00:00:01")).toString());
+		assertEquals(
+				"NovedadesDTO(films=[], actors=[ActorEditDTO(actorId=204, firstName=PEPITO, lastName=GRILLO, films=[])], categories=[], languages=[])",
+				catalogoSrv.novedades(Timestamp.valueOf("2019-01-01 00:00:01")).toString());
 	}
 
 }

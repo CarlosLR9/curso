@@ -29,15 +29,13 @@ public class CatalogoServiceImpl implements CatalogoService {
 
 	@Override
 	public NovedadesDTO novedades(Timestamp fecha) {
-		// Timestamp fecha = Timestamp.valueOf("2019-01-01 00:00:00");
-		if(fecha == null)
+		if (fecha == null)
 			fecha = Timestamp.from(Instant.now().minusSeconds(36000));
 		return new NovedadesDTO(
-				filmSrv.novedades(fecha).stream().map(item -> FilmEditDTO.from(item)).toList(), 
-				artorSrv.novedades(fecha).stream().map(item -> ActorEditDTO.from(item)).toList(), 
-				categorySrv.novedades(fecha).stream().map(item -> CategoryEditDTO.from(item)).toList(), 
-				languageSrv.novedades(fecha).stream().map(item -> LanguageEditDTO.from(item)).toList()
-				);
+				filmSrv.novedades(fecha).stream().map(item -> FilmEditDTO.from(item)).toList(),
+				artorSrv.novedades(fecha).stream().map(item -> ActorEditDTO.from(item)).toList(),
+				categorySrv.novedades(fecha).stream().map(item -> CategoryEditDTO.from(item)).toList(),
+				languageSrv.novedades(fecha).stream().map(item -> LanguageEditDTO.from(item)).toList());
 	}
 
 }

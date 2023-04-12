@@ -23,6 +23,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.domains.contracts.services.FilmService;
 import com.example.domains.entities.dtos.ElementoDTO;
+import com.example.domains.entities.dtos.FilmDetailsDTO;
 import com.example.domains.entities.dtos.FilmEditDTO;
 import com.example.domains.entities.dtos.FilmShort;
 import com.example.exceptions.BadRequestException;
@@ -52,11 +53,11 @@ public class FilmResource {
 	}
 
 	@GetMapping(path = "/{id}")
-	public FilmEditDTO getOne(@PathVariable int id) throws NotFoundException {
+	public FilmDetailsDTO getOne(@PathVariable int id) throws NotFoundException {
 		var item = srv.getOne(id);
 		if (item.isEmpty())
 			throw new NotFoundException();
-		return FilmEditDTO.from(item.get());
+		return FilmDetailsDTO.from(item.get());
 	}
 
 	@GetMapping(path = "/{id}/actores")

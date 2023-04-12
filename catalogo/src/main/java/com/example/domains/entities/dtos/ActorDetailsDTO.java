@@ -12,32 +12,22 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data @AllArgsConstructor @NoArgsConstructor
-public class ActorEditDTO {
+public class ActorDetailsDTO {
 	@JsonProperty("id")
 	private int actorId;
 	@JsonProperty("nombre")
 	private String firstName;
 	@JsonProperty("apellidos")
 	private String lastName;
-	private List<Integer> films = new ArrayList<Integer>();
+	private List<String> films = new ArrayList<String>();
 	
-	public static ActorEditDTO from(Actor source) {
-		return new ActorEditDTO(
+	public static ActorDetailsDTO from(Actor source) {
+		return new ActorDetailsDTO(
 				source.getActorId(), 
 				source.getFirstName(), 
 				source.getLastName(),
-				source.getFilms().stream().map(item -> item.getFilmId())
+				source.getFilms().stream().map(item -> item.getTitle())
 				.collect(Collectors.toList())
 				);
-	}
-
-	public static Actor from(ActorEditDTO source) {
-		var rslt = new Actor(
-				source.getActorId(), 
-				source.getFirstName(), 
-				source.getLastName()
-				);
-		source.getFilms().stream().forEach(item -> rslt.addFilm(item));
-		return rslt;
 	}
 }

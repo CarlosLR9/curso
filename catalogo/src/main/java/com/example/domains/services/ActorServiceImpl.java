@@ -62,11 +62,11 @@ public class ActorServiceImpl implements ActorService {
 
 	@Override
 	public Actor add(Actor item) throws DuplicateKeyException, InvalidDataException {
-		if(item == null)
+		if (item == null)
 			throw new InvalidDataException("No puede ser nulo");
-		if(item.isInvalid())
+		if (item.isInvalid())
 			throw new InvalidDataException(item.getErrorsMessage(), item.getErrorsFields());
-		if(dao.existsById(item.getActorId()))
+		if (dao.existsById(item.getActorId()))
 			throw new DuplicateKeyException(item.getErrorsMessage());
 		return dao.save(item);
 	}
@@ -74,19 +74,19 @@ public class ActorServiceImpl implements ActorService {
 	@Override
 	@Transactional
 	public Actor modify(Actor item) throws NotFoundException, InvalidDataException {
-		if(item == null)
+		if (item == null)
 			throw new InvalidDataException("No puede ser nulo");
-		if(item.isInvalid())
+		if (item.isInvalid())
 			throw new InvalidDataException(item.getErrorsMessage(), item.getErrorsFields());
 		var leido = dao.findById(item.getActorId());
-		if(leido.isEmpty())
+		if (leido.isEmpty())
 			throw new NotFoundException();
 		return dao.save(item.merge(leido.get()));
 	}
 
 	@Override
 	public void delete(Actor item) throws InvalidDataException {
-		if(item == null)
+		if (item == null)
 			throw new InvalidDataException("No puede ser nulo");
 		deleteById(item.getActorId());
 	}

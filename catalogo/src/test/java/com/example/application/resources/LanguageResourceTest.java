@@ -1,6 +1,5 @@
 package com.example.application.resources;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -76,7 +75,6 @@ class LanguageResourceTest {
 	@Test
 	void testGetOne404() throws Exception {
 		int id = 1;
-		var ele = new Language(id, "Español");
 		when(srv.getOne(id)).thenReturn(Optional.empty());
 		mockMvc.perform(get("/api/lenguajes/v1/{id}", id))
 			.andExpect(status().isNotFound())
@@ -165,7 +163,6 @@ class LanguageResourceTest {
 		int id = 1;
 		var ele = new Language(id, "Español");
 		when(srv.add(ele)).thenReturn(ele);
-//		srv.deleteById(ele.getLanguageId());
 		mockMvc.perform(delete("/api/lenguajes/v1//{id}", id)
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(objectMapper.writeValueAsString(srv.getOne(1)))
@@ -173,17 +170,6 @@ class LanguageResourceTest {
 			.andExpect(status().isNoContent())
 	        .andDo(print())
 	        ;
-	}
-	
-	@Test
-	void testDelete404() throws Exception {
-		int id = 1;
-		var ele = new Language(id, "Español");
-		srv.deleteById(null);
-		mockMvc.perform(get("/api/lenguajes/v1/{id}", id))
-		.andExpect(status().isNotFound())
-		.andExpect(jsonPath("$.title").value("Not Found"))
-        .andDo(print());
 	}
 
 }

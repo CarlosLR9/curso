@@ -20,7 +20,7 @@ class ActorRepositoryMemoryTest {
 
 	@Autowired
 	ActorRepository dao;
-	
+
 	@BeforeEach
 	void setUp() throws Exception {
 		var item = new Actor(0, "Pepito", "GRILLO");
@@ -40,7 +40,7 @@ class ActorRepositoryMemoryTest {
 		assertEquals(3, dao.findAll().size());
 		assertEquals(1, dao.findAll().get(0).getActorId());
 	}
-	
+
 	@Test
 	@Disabled
 	void testOne() {

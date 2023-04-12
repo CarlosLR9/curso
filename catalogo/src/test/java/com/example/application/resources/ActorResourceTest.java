@@ -1,6 +1,5 @@
 package com.example.application.resources;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -15,13 +14,11 @@ import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -32,7 +29,6 @@ import com.example.domains.entities.Language;
 import com.example.domains.entities.Film.Rating;
 import com.example.domains.entities.dtos.ActorEditDTO;
 import com.example.domains.entities.dtos.ActorShort;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.Value;
@@ -111,7 +107,6 @@ class ActorResourceTest {
 	@Test
 	void testGetOne404() throws Exception {
 		int id = 1;
-		var ele = new Actor(id, "Pepito", "Grillo");
 		when(srv.getOne(id)).thenReturn(Optional.empty());
 		mockMvc.perform(get("/api/actores/v1/{id}", id))
 			.andExpect(status().isNotFound())
@@ -196,17 +191,6 @@ class ActorResourceTest {
 			.andExpect(status().isNoContent())
 	        .andDo(print())
 	        ;
-	}
-	
-	@Test
-	void testDelete404() throws Exception {
-		int id = 1;
-		var ele = new Actor(id, "Pepito", "Grillo");
-		srv.deleteById(null);
-		mockMvc.perform(get("/api/actores/v1/{id}", id))
-		.andExpect(status().isNotFound())
-		.andExpect(jsonPath("$.title").value("Not Found"))
-        .andDo(print());
 	}
 	
 }

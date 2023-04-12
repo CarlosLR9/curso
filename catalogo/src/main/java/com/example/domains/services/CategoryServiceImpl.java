@@ -21,7 +21,7 @@ import jakarta.transaction.Transactional;
 public class CategoryServiceImpl implements CategoryService {
 	@Autowired
 	private CategoryRepository dao;
-	
+
 	@Override
 	public List<Category> getAll() {
 		return dao.findAll(Sort.by("name"));
@@ -35,11 +35,11 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	@Transactional
 	public Category add(Category item) throws DuplicateKeyException, InvalidDataException {
-		if(item == null)
+		if (item == null)
 			throw new InvalidDataException("Faltan los datos");
-		if(item.isInvalid())
+		if (item.isInvalid())
 			throw new InvalidDataException(item.getErrorsMessage(), item.getErrorsFields());
-		if(getOne(item.getCategoryId()).isPresent())
+		if (getOne(item.getCategoryId()).isPresent())
 			throw new DuplicateKeyException();
 		return dao.save(item);
 	}
@@ -47,12 +47,12 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	@Transactional
 	public Category modify(Category item) throws NotFoundException, InvalidDataException {
-		if(item == null)
+		if (item == null)
 			throw new InvalidDataException("Faltan los datos");
-		if(item.isInvalid())
+		if (item.isInvalid())
 			throw new InvalidDataException(item.getErrorsMessage(), item.getErrorsFields());
 		var leido = dao.findById(item.getCategoryId());
-		if(leido.isEmpty())
+		if (leido.isEmpty())
 			throw new NotFoundException();
 		return dao.save(item.merge(leido.get()));
 	}
@@ -64,7 +64,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public void delete(Category item) throws InvalidDataException {
-		if(item == null)
+		if (item == null)
 			throw new InvalidDataException("Faltan los datos");
 		deleteById(item.getCategoryId());
 	}

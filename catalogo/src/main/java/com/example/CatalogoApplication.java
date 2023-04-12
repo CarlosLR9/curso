@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import jakarta.transaction.Transactional;
 
 @SpringBootApplication
-public class CatalogoApplication implements CommandLineRunner  {
+public class CatalogoApplication implements CommandLineRunner {
 
 	public static void main(String[] args) {
 		SpringApplication.run(CatalogoApplication.class, args);

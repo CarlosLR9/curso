@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.domains.contracts.services.ActorService;
+import com.example.domains.entities.dtos.ActorDetailsDTO;
 import com.example.domains.entities.dtos.ActorEditDTO;
 import com.example.domains.entities.dtos.ActorShort;
 import com.example.domains.entities.dtos.ElementoDTO;
@@ -53,11 +54,11 @@ public class ActorResource {
 	}
 
 	@GetMapping(path = "/{id}")
-	public ActorEditDTO getOne(@PathVariable int id) throws NotFoundException {
+	public ActorDetailsDTO getOne(@PathVariable int id) throws NotFoundException {
 		var item = srv.getOne(id);
 		if (item.isEmpty())
 			throw new NotFoundException();
-		return ActorEditDTO.from(item.get());
+		return ActorDetailsDTO.from(item.get());
 	}
 
 	@GetMapping(path = "/{id}/pelis")

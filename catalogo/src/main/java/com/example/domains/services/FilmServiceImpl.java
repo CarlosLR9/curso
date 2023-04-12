@@ -63,11 +63,11 @@ public class FilmServiceImpl implements FilmService {
 	@Override
 	@Transactional
 	public Film add(Film item) throws DuplicateKeyException, InvalidDataException {
-		if(item == null)
+		if (item == null)
 			throw new InvalidDataException("No puede ser nulo");
-		if(item.isInvalid())
+		if (item.isInvalid())
 			throw new InvalidDataException(item.getErrorsMessage(), item.getErrorsFields());
-		if(dao.existsById(item.getFilmId()))
+		if (dao.existsById(item.getFilmId()))
 			throw new DuplicateKeyException(item.getErrorsMessage());
 		var actores = item.getActors();
 		var categorias = item.getCategories();
@@ -82,19 +82,19 @@ public class FilmServiceImpl implements FilmService {
 	@Override
 	@Transactional
 	public Film modify(Film item) throws NotFoundException, InvalidDataException {
-		if(item == null)
+		if (item == null)
 			throw new InvalidDataException("No puede ser nulo");
-		if(item.isInvalid())
+		if (item.isInvalid())
 			throw new InvalidDataException(item.getErrorsMessage(), item.getErrorsFields());
 		var leido = dao.findById(item.getFilmId());
-		if(leido.isEmpty())
+		if (leido.isEmpty())
 			throw new NotFoundException();
 		return dao.save(item.merge(leido.get()));
 	}
 
 	@Override
 	public void delete(Film item) throws InvalidDataException {
-		if(item == null)
+		if (item == null)
 			throw new InvalidDataException("No puede ser nulo");
 		deleteById(item.getFilmId());
 	}

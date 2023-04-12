@@ -38,9 +38,10 @@ class FilmServiceImplTest {
 
 		@Test
 		void testAdd() throws DuplicateKeyException, InvalidDataException {
-			var item = new Film(0, "Pinocho", "Un anciano llamado Geppetto fabrica una marioneta de madera a la que llama Pinocho", 
-						(short) 1940, new Language(1), new Language(2), (byte) 2, new BigDecimal(2), 
-						80, new BigDecimal(20), Rating.GENERAL_AUDIENCES);
+			var item = new Film(0, "Pinocho",
+					"Un anciano llamado Geppetto fabrica una marioneta de madera a la que llama Pinocho", (short) 1940,
+					new Language(1), new Language(2), (byte) 2, new BigDecimal(2), 80, new BigDecimal(20),
+					Rating.GENERAL_AUDIENCES);
 			var rslt = srv.add(item);
 
 			assertEquals(item.getFilmId(), rslt.getFilmId());
@@ -50,9 +51,10 @@ class FilmServiceImplTest {
 
 		@Test
 		void testModify() throws DuplicateKeyException, InvalidDataException, NotFoundException {
-			var item = new Film(0, "Pinocho", "Un anciano llamado Geppetto fabrica una marioneta de madera a la que llama Pinocho", 
-					(short) 1940, new Language(1), new Language(2), (byte) 2, new BigDecimal(2), 
-					80, new BigDecimal(20), Rating.GENERAL_AUDIENCES);
+			var item = new Film(0, "Pinocho",
+					"Un anciano llamado Geppetto fabrica una marioneta de madera a la que llama Pinocho", (short) 1940,
+					new Language(1), new Language(2), (byte) 2, new BigDecimal(2), 80, new BigDecimal(20),
+					Rating.GENERAL_AUDIENCES);
 			var rslt = srv.add(item);
 			item.setTitle("Pinocchio");
 			srv.modify(item);
@@ -64,9 +66,10 @@ class FilmServiceImplTest {
 
 		@Test
 		void testDelete() throws DuplicateKeyException, InvalidDataException {
-			var item = new Film(0, "Pinocho", "Un anciano llamado Geppetto fabrica una marioneta de madera a la que llama Pinocho", 
-					(short) 1940, new Language(1), new Language(2), (byte) 2, new BigDecimal(2), 
-					80, new BigDecimal(20), Rating.GENERAL_AUDIENCES);
+			var item = new Film(0, "Pinocho",
+					"Un anciano llamado Geppetto fabrica una marioneta de madera a la que llama Pinocho", (short) 1940,
+					new Language(1), new Language(2), (byte) 2, new BigDecimal(2), 80, new BigDecimal(20),
+					Rating.GENERAL_AUDIENCES);
 			var rslt = srv.add(item);
 			srv.delete(rslt);
 			assertThat(srv.getOne(rslt.getFilmId()).isEmpty()).isTrue();
@@ -74,9 +77,10 @@ class FilmServiceImplTest {
 
 		@Test
 		void testDeleteById() throws DuplicateKeyException, InvalidDataException {
-			var item = new Film(0, "Pinocho", "Un anciano llamado Geppetto fabrica una marioneta de madera a la que llama Pinocho", 
-					(short) 1940, new Language(1), new Language(2), (byte) 2, new BigDecimal(2), 
-					80, new BigDecimal(20), Rating.GENERAL_AUDIENCES);
+			var item = new Film(0, "Pinocho",
+					"Un anciano llamado Geppetto fabrica una marioneta de madera a la que llama Pinocho", (short) 1940,
+					new Language(1), new Language(2), (byte) 2, new BigDecimal(2), 80, new BigDecimal(20),
+					Rating.GENERAL_AUDIENCES);
 			var rslt = srv.add(item);
 			srv.deleteById(rslt.getFilmId());
 			assertThat(srv.getOne(rslt.getFilmId()).isEmpty()).isTrue();
@@ -98,16 +102,20 @@ class FilmServiceImplTest {
 
 		@Test
 		void testAddInvalid() throws DuplicateKeyException, InvalidDataException {
-			assertThrows(InvalidDataException.class, () -> srv.add(new Film(0, "", "Un anciano llamado Geppetto fabrica una marioneta de madera a la que llama Pinocho", 
-					(short) 1940, new Language(1), new Language(2), (byte) 2, new BigDecimal(2), 
-					80, new BigDecimal(20), Rating.GENERAL_AUDIENCES)));
+			assertThrows(InvalidDataException.class,
+					() -> srv.add(new Film(0, "",
+							"Un anciano llamado Geppetto fabrica una marioneta de madera a la que llama Pinocho",
+							(short) 1940, new Language(1), new Language(2), (byte) 2, new BigDecimal(2), 80,
+							new BigDecimal(20), Rating.GENERAL_AUDIENCES)));
 		}
 
 		@Test
 		void testAddDuplicated() throws DuplicateKeyException, InvalidDataException {
-			assertThrows(DuplicateKeyException.class, () -> srv.add(new Film(1, "Pinocho", "Un anciano llamado Geppetto fabrica una marioneta de madera a la que llama Pinocho", 
-					(short) 1940, new Language(1), new Language(2), (byte) 2, new BigDecimal(2), 
-					80, new BigDecimal(20), Rating.GENERAL_AUDIENCES)));
+			assertThrows(DuplicateKeyException.class,
+					() -> srv.add(new Film(1, "Pinocho",
+							"Un anciano llamado Geppetto fabrica una marioneta de madera a la que llama Pinocho",
+							(short) 1940, new Language(1), new Language(2), (byte) 2, new BigDecimal(2), 80,
+							new BigDecimal(20), Rating.GENERAL_AUDIENCES)));
 		}
 
 		@Test
@@ -117,18 +125,21 @@ class FilmServiceImplTest {
 
 		@Test
 		void testModifyInvalid() throws NotFoundException, InvalidDataException {
-			assertThrows(InvalidDataException.class, () -> srv.modify(new Film(0, "", "Un anciano llamado Geppetto fabrica una marioneta de madera a la que llama Pinocho", 
-					(short) 1940, new Language(1), new Language(2), (byte) 2, new BigDecimal(2), 
-					80, new BigDecimal(20), Rating.GENERAL_AUDIENCES)));
+			assertThrows(InvalidDataException.class,
+					() -> srv.modify(new Film(0, "",
+							"Un anciano llamado Geppetto fabrica una marioneta de madera a la que llama Pinocho",
+							(short) 1940, new Language(1), new Language(2), (byte) 2, new BigDecimal(2), 80,
+							new BigDecimal(20), Rating.GENERAL_AUDIENCES)));
 		}
 
 		@Test
 		void testModifyEmpty() throws NotFoundException, InvalidDataException {
-			assertThrows(NotFoundException.class, () -> srv.modify(new Film(3333, "Pinocho", "Un anciano llamado Geppetto fabrica una marioneta de madera a la que llama Pinocho", 
-					(short) 1940, new Language(1), new Language(2), (byte) 2, new BigDecimal(2), 
-					80, new BigDecimal(20), Rating.GENERAL_AUDIENCES)));
+			assertThrows(NotFoundException.class,
+					() -> srv.modify(new Film(3333, "Pinocho",
+							"Un anciano llamado Geppetto fabrica una marioneta de madera a la que llama Pinocho",
+							(short) 1940, new Language(1), new Language(2), (byte) 2, new BigDecimal(2), 80,
+							new BigDecimal(20), Rating.GENERAL_AUDIENCES)));
 		}
 	}
-
 
 }

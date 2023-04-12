@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.domains.contracts.services.CategoryService;
+import com.example.domains.entities.dtos.CategoryDTO;
+import com.example.domains.entities.dtos.CategoryDetailsDTO;
 import com.example.domains.entities.dtos.CategoryEditDTO;
 import com.example.domains.entities.dtos.ElementoDTO;
 import com.example.exceptions.BadRequestException;
@@ -36,21 +38,21 @@ public class CategoryResource {
 	private CategoryService srv;
 
 	@GetMapping
-	public List<CategoryEditDTO> getAll() throws NotFoundException {
+	public List<CategoryDTO> getAll() throws NotFoundException {
 		var list = srv.getAll();
 		if (list.isEmpty())
 			throw new NotFoundException();
-		var listDTO = new ArrayList<CategoryEditDTO>();
-		list.forEach(item -> listDTO.add(CategoryEditDTO.from(item)));
+		var listDTO = new ArrayList<CategoryDTO>();
+		list.forEach(item -> listDTO.add(CategoryDTO.from(item)));
 		return listDTO;
 	}
 
 	@GetMapping(path = "/{id}")
-	public CategoryEditDTO getOne(@PathVariable int id) throws NotFoundException {
+	public CategoryDetailsDTO getOne(@PathVariable int id) throws NotFoundException {
 		var item = srv.getOne(id);
 		if (item.isEmpty())
 			throw new NotFoundException();
-		return CategoryEditDTO.from(item.get());
+		return CategoryDetailsDTO.from(item.get());
 	}
 
 	@GetMapping(path = "/{id}/pelis")

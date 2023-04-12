@@ -20,6 +20,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.domains.contracts.services.LanguageService;
 import com.example.domains.entities.dtos.ElementoDTO;
+import com.example.domains.entities.dtos.LanguageDTO;
+import com.example.domains.entities.dtos.LanguageDetailsDTO;
 import com.example.domains.entities.dtos.LanguageEditDTO;
 import com.example.exceptions.BadRequestException;
 import com.example.exceptions.DuplicateKeyException;
@@ -36,21 +38,21 @@ public class LanguageResource {
 	private LanguageService srv;
 
 	@GetMapping
-	public List<LanguageEditDTO> getAll() throws NotFoundException {
+	public List<LanguageDTO> getAll() throws NotFoundException {
 		var list = srv.getAll();
 		if (list.isEmpty())
 			throw new NotFoundException();
-		var listDTO = new ArrayList<LanguageEditDTO>();
-		list.forEach(item -> listDTO.add(LanguageEditDTO.from(item)));
+		var listDTO = new ArrayList<LanguageDTO>();
+		list.forEach(item -> listDTO.add(LanguageDTO.from(item)));
 		return listDTO;
 	}
 
 	@GetMapping(path = "/{id}")
-	public LanguageEditDTO getOne(@PathVariable int id) throws NotFoundException {
+	public LanguageDetailsDTO getOne(@PathVariable int id) throws NotFoundException {
 		var item = srv.getOne(id);
 		if (item.isEmpty())
 			throw new NotFoundException();
-		return LanguageEditDTO.from(item.get());
+		return LanguageDetailsDTO.from(item.get());
 	}
 
 	@GetMapping(path = "/{id}/pelis")

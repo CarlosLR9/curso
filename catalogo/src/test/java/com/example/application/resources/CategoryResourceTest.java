@@ -1,6 +1,5 @@
 package com.example.application.resources;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -76,7 +75,6 @@ class CategoryResourceTest {
 	@Test
 	void testGetOne404() throws Exception {
 		int id = 1;
-		var ele = new Category(id, "Animacion");
 		when(srv.getOne(id)).thenReturn(Optional.empty());
 		mockMvc.perform(get("/api/categorias/v1/{id}", id))
 			.andExpect(status().isNotFound())
@@ -149,7 +147,6 @@ class CategoryResourceTest {
 		int id = 1;
 		var ele = new Category(id, "Animacion");
 		when(srv.add(ele)).thenReturn(ele);
-//		srv.deleteById(ele.getCategoryId());
 		mockMvc.perform(delete("/api/categorias/v1//{id}", id)
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(objectMapper.writeValueAsString(srv.getOne(1)))
@@ -157,17 +154,6 @@ class CategoryResourceTest {
 			.andExpect(status().isNoContent())
 	        .andDo(print())
 	        ;
-	}
-	
-	@Test
-	void testDelete404() throws Exception {
-		int id = 1;
-		var ele = new Category(id, "Animacion");
-		srv.deleteById(null);
-		mockMvc.perform(get("/api/categorias/v1/{id}", id))
-		.andExpect(status().isNotFound())
-		.andExpect(jsonPath("$.title").value("Not Found"))
-        .andDo(print());
 	}
 
 }
