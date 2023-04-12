@@ -183,7 +183,6 @@ class ActorResourceTest {
 		int id = 1;
 		var ele = new Actor(id, "Pepito", "Grillo");
 		when(srv.add(ele)).thenReturn(ele);
-//		srv.deleteById(ele.getActorId());
 		mockMvc.perform(delete("/api/actores/v1//{id}", id)
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(objectMapper.writeValueAsString(srv.getOne(1)))

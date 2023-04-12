@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data @AllArgsConstructor @NoArgsConstructor
-public class ActorDTO {
+public class ActorDTO2 {
 	@JsonProperty("id")
 	private int actorId;
 	@JsonProperty("nombre")
@@ -16,15 +16,15 @@ public class ActorDTO {
 	@JsonProperty("apellidos")
 	private String lastName;
 	
-	public static ActorDTO from(Actor source) {
-		return new ActorDTO(
+	public static ActorDTO2 from(Actor source) {
+		return new ActorDTO2(
 				source.getActorId(), 
 				source.getFirstName(), 
 				source.getLastName()
 				);
 	}
 
-	public static Actor from(ActorDTO source) {
+	public static Actor from(ActorDTO2 source) {
 		var rslt = new Actor(
 				source.getActorId(), 
 				source.getFirstName(), 
