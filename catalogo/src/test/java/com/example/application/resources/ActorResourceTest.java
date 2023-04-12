@@ -140,9 +140,9 @@ class ActorResourceTest {
 		var ele = new Actor(id, "Pepito", "Grillo");
 		when(srv.add(ele)).thenReturn(ele);
 		mockMvc.perform(post("/api/actores/v1")
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(objectMapper.writeValueAsString(ActorEditDTO.from(ele)))
-			)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(ActorEditDTO.from(ele)))
+				)
 			.andExpect(status().isCreated())
 	        .andExpect(header().string("Location", "http://localhost/api/actores/v1/1"))
 	        .andDo(print())
@@ -153,28 +153,29 @@ class ActorResourceTest {
 	void testUpdate() throws Exception {
 		int id = 1;
 		var ele = new Actor(id, "Pepito", "Grillo");
-		when(srv.add(ele)).thenReturn(ele);
-		ele.setFirstName("Jiminy");
 		when(srv.modify(ele)).thenReturn(ele);
 		mockMvc.perform(put("/api/actores/v1//{id}", id)
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(objectMapper.writeValueAsString(ActorEditDTO.from(ele)))
-			)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(ActorEditDTO.from(ele)))
+				)
 			.andExpect(status().isNoContent())
 	        .andDo(print())
 	        ;
 	}
 	
 	@Test
-	void testUpdate404() throws Exception {
+	void testUpdate400() throws Exception {
 		int id = 1;
-		var ele = new Actor(id, "Pepito", "Grillo");
+		var ele = new Actor(2, "Pepito", "Grillo");
 		when(srv.add(ele)).thenReturn(ele);
 		ele.setFirstName("Jiminy");
-		when(srv.modify(ele)).thenReturn(null);
-		mockMvc.perform(get("/api/actores/v1/{id}", id))
-			.andExpect(status().isNotFound())
-			.andExpect(jsonPath("$.title").value("Not Found"))
+		when(srv.modify(ele)).thenReturn(ele);
+		mockMvc.perform(put("/api/actores/v1//{id}", id)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(ActorEditDTO.from(ele)))
+				)
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.title").value("Bad Request"))
 	        .andDo(print());
 	}
 
@@ -183,9 +184,9 @@ class ActorResourceTest {
 		int id = 1;
 		var ele = new Actor(id, "Pepito", "Grillo");
 		when(srv.add(ele)).thenReturn(ele);
+		doNothing().when(srv).deleteById(id);
 		mockMvc.perform(delete("/api/actores/v1//{id}", id)
 			.contentType(MediaType.APPLICATION_JSON)
-			.content(objectMapper.writeValueAsString(srv.getOne(1)))
 			)
 			.andExpect(status().isNoContent())
 	        .andDo(print())

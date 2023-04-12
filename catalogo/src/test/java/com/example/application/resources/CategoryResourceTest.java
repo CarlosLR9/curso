@@ -1,5 +1,6 @@
 package com.example.application.resources;
 
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -104,9 +105,9 @@ class CategoryResourceTest {
 		var ele = new Category(id, "Animacion");
 		when(srv.add(ele)).thenReturn(ele);
 		mockMvc.perform(post("/api/categorias/v1")
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(objectMapper.writeValueAsString(CategoryEditDTO.from(ele)))
-			)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(CategoryEditDTO.from(ele)))
+				)
 			.andExpect(status().isCreated())
 	        .andExpect(header().string("Location", "http://localhost/api/categorias/v1/1"))
 	        .andDo(print())
@@ -121,24 +122,27 @@ class CategoryResourceTest {
 		ele.setName("Stop Motion");
 		when(srv.modify(ele)).thenReturn(ele);
 		mockMvc.perform(put("/api/categorias/v1//{id}", id)
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(objectMapper.writeValueAsString(CategoryEditDTO.from(ele)))
-			)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(CategoryEditDTO.from(ele)))
+				)
 			.andExpect(status().isNoContent())
 	        .andDo(print())
 	        ;
 	}
 	
 	@Test
-	void testUpdate404() throws Exception {
+	void testUpdate400() throws Exception {
 		int id = 1;
-		var ele = new Category(id, "Animacion");
+		var ele = new Category(2, "Animacion");
 		when(srv.add(ele)).thenReturn(ele);
 		ele.setName("Stop Motion");
-		when(srv.modify(ele)).thenReturn(null);
-		mockMvc.perform(get("/api/categorias/v1/{id}", id))
-			.andExpect(status().isNotFound())
-			.andExpect(jsonPath("$.title").value("Not Found"))
+		when(srv.modify(ele)).thenReturn(ele);
+		mockMvc.perform(put("/api/categorias/v1/{id}", id)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(CategoryEditDTO.from(ele)))
+				)
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.title").value("Bad Request"))
 	        .andDo(print());
 	}
 
@@ -147,9 +151,9 @@ class CategoryResourceTest {
 		int id = 1;
 		var ele = new Category(id, "Animacion");
 		when(srv.add(ele)).thenReturn(ele);
+		doNothing().when(srv).deleteById(id);
 		mockMvc.perform(delete("/api/categorias/v1//{id}", id)
 			.contentType(MediaType.APPLICATION_JSON)
-			.content(objectMapper.writeValueAsString(srv.getOne(1)))
 			)
 			.andExpect(status().isNoContent())
 	        .andDo(print())

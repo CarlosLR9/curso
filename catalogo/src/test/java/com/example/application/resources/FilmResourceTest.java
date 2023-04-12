@@ -1,5 +1,6 @@
 package com.example.application.resources;
 
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -179,26 +180,29 @@ class FilmResourceTest {
 		ele.setTitle("Pinocchio");
 		when(srv.modify(ele)).thenReturn(ele);
 		mockMvc.perform(put("/api/pelis/v1//{id}", id)
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(objectMapper.writeValueAsString(FilmEditDTO.from(ele)))
-			)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(FilmEditDTO.from(ele)))
+				)
 			.andExpect(status().isNoContent())
 	        .andDo(print())
 	        ;
 	}
 	
 	@Test
-	void testUpdate404() throws Exception {
+	void testUpdate400() throws Exception {
 		int id = 1;
-		var ele = new Film(id, "Pinocho", "Un anciano llamado Geppetto fabrica una marioneta de madera a la que llama Pinocho", 
+		var ele = new Film(2, "Pinocho", "Un anciano llamado Geppetto fabrica una marioneta de madera a la que llama Pinocho", 
 				(short) 1940, new Language(1), new Language(2), (byte) 2, new BigDecimal(2), 
 				80, new BigDecimal(20), Rating.GENERAL_AUDIENCES);
 		when(srv.add(ele)).thenReturn(ele);
 		ele.setTitle("Pinocchio");
 		when(srv.modify(ele)).thenReturn(null);
-		mockMvc.perform(get("/api/pelis/v1/{id}", id))
-			.andExpect(status().isNotFound())
-			.andExpect(jsonPath("$.title").value("Not Found"))
+		mockMvc.perform(put("/api/pelis/v1/{id}", id)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(FilmEditDTO.from(ele)))
+				)
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.title").value("Bad Request"))
 	        .andDo(print());
 	}
 
@@ -209,9 +213,9 @@ class FilmResourceTest {
 				(short) 1940, new Language(1), new Language(2), (byte) 2, new BigDecimal(2), 
 				80, new BigDecimal(20), Rating.GENERAL_AUDIENCES);
 		when(srv.add(ele)).thenReturn(ele);
+		doNothing().when(srv).deleteById(id);
 		mockMvc.perform(delete("/api/pelis/v1//{id}", id)
 			.contentType(MediaType.APPLICATION_JSON)
-			.content(objectMapper.writeValueAsString(srv.getOne(1)))
 			)
 			.andExpect(status().isNoContent())
 	        .andDo(print())

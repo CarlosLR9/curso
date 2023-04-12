@@ -1,5 +1,6 @@
 package com.example.application.resources;
 
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -120,9 +121,9 @@ class LanguageResourceTest {
 		var ele = new Language(id, "Español");
 		when(srv.add(ele)).thenReturn(ele);
 		mockMvc.perform(post("/api/lenguajes/v1")
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(objectMapper.writeValueAsString(LanguageEditDTO.from(ele)))
-			)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(LanguageEditDTO.from(ele)))
+				)
 			.andExpect(status().isCreated())
 	        .andExpect(header().string("Location", "http://localhost/api/lenguajes/v1/1"))
 	        .andDo(print())
@@ -137,24 +138,27 @@ class LanguageResourceTest {
 		ele.setName("Stop Motion");
 		when(srv.modify(ele)).thenReturn(ele);
 		mockMvc.perform(put("/api/lenguajes/v1//{id}", id)
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(objectMapper.writeValueAsString(LanguageEditDTO.from(ele)))
-			)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(LanguageEditDTO.from(ele)))
+				)
 			.andExpect(status().isNoContent())
 	        .andDo(print())
 	        ;
 	}
 	
 	@Test
-	void testUpdate404() throws Exception {
+	void testUpdate400() throws Exception {
 		int id = 1;
-		var ele = new Language(id, "Español");
+		var ele = new Language(2, "Español");
 		when(srv.add(ele)).thenReturn(ele);
 		ele.setName("Stop Motion");
 		when(srv.modify(ele)).thenReturn(null);
-		mockMvc.perform(get("/api/lenguajes/v1/{id}", id))
-			.andExpect(status().isNotFound())
-			.andExpect(jsonPath("$.title").value("Not Found"))
+		mockMvc.perform(put("/api/lenguajes/v1/{id}", id)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(LanguageEditDTO.from(ele)))
+				)
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.title").value("Bad Request"))
 	        .andDo(print());
 	}
 
@@ -163,9 +167,9 @@ class LanguageResourceTest {
 		int id = 1;
 		var ele = new Language(id, "Español");
 		when(srv.add(ele)).thenReturn(ele);
+		doNothing().when(srv).deleteById(id);
 		mockMvc.perform(delete("/api/lenguajes/v1//{id}", id)
 			.contentType(MediaType.APPLICATION_JSON)
-			.content(objectMapper.writeValueAsString(srv.getOne(1)))
 			)
 			.andExpect(status().isNoContent())
 	        .andDo(print())

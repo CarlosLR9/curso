@@ -37,7 +37,7 @@ class ActorEditDTOTest {
 				() -> assertEquals(0, actor.getActorId()),
 				() -> assertEquals("PEPITO", actor.getFirstName()),
 				() -> assertEquals("GRILLO", actor.getLastName()),
-				() -> assertEquals(1, actor.getFilms().get(0))
+				() -> assertEquals(1, actor.getFilms().get(0).getFilmId())
 				);
 	}
 
