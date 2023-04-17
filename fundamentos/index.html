@@ -7,14 +7,34 @@
     <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css">
 </head>
 <body>
-    <h1 class="bg-danger"><b><i>Hola mundo!</i></b></h1>
+    <h1 class="bg-danger"><b><i>Adiós mundo!</i></b></h1>
 
     <script src="demo.js"></script>
     <script src="otro.js"></script>
     <script>
-        x = 'En la página'
-        console.log('Hola mundo')
-        usaKk();
+        // let x = "En la pagina"
+        // console.log('Hola mundo')
+        // usaKK();
+        // // usaKK = 4;
+        // console.log(usaKK)
+        // (function() {
+        //     for(let i=0; i < 10; i++) {
+        //         // ...
+        //     }
+        // })()
     </script>
+    <script type="module">
+        import * as m1 from './modulos/modulo1.js'
+        import {nombre, calc, display } from './modulos/modulo2.js'
+        import {nombre as nombre2} from './modulos/modulo1.js'
+        // import {display} from './modulos/index.js'
+
+        console.log(m1.nombre, m1.calc(2, 2))
+        console.log(nombre, calc(2,2))
+        display();
+        m1.setNombre('Soy el principal')
+        console.log(nombre, nombre2)
+
+   </script>
 </body>
 </html>
