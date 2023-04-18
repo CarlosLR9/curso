@@ -4,44 +4,122 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora</title>
-    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="./calculadora.css">
     <script type="text/javascript" src="calculadora.js"></script>
 </head>
 <body>
-    <div class="calculadora">
-        <form action="#" name="calculadora" id="calculadora">
-        <output id="op1"></output>
-        <span id="op">?</span>
-        <output id="op2"></output>
-        <span id="span">=</span>
-        <output id="rslt">0</output>
+    <!-- <form class="Calculadora">
+        <p><output id="op"></output></p>
+        <p><output id="rslt"></output></p>
+        
+        <input type="button" id="re" value="C">
+        <input type="button" id="borrar" value="<=">
+        <input class="calculo" type="button" id="calc" value="=">
+    
+        <input type="button" id="num" value="7">
+        <input type="button" id="num" value="8">
+        <input type="button" id="num" value="9">
+        <input class="calculo" type="button" id="calc" value="/">
+    
+        <input type="button" id="num" value="4">
+        <input type="button" id="num" value="5">
+        <input type="button" id="num" value="6">
+        <input class="calculo" type="button" id="calc" value="*">
+    
+        <input type="button" id="num" value="3">
+        <input type="button" id="num" value="2">
+        <input type="button" id="num" value="1">
+        <input class="calculo" type="button" id="calc" value="+">
 
-        <p>
-            <input type="button" id="id7" value="7">
-            <input type="button" id="id8" value="8">
-            <input type="button" id="id9" value="9">
-            <input type="button" id="div" value="/">
-        </p>
-        <p>
-            <input type="button" id="id4" value="4">
-            <input type="button" id="id5" value="5">
-            <input type="button" id="id6" value="6">
-            <input type="button" id="mult" value="*">
-        </p>
-        <p>
-            <input type="button" id="id3" value="3">
-            <input type="button" id="id2" value="2">
-            <input type="button" id="id1" value="1">
-            <input type="button" id="sum" value="+">
-        </p>
-        <p>
-            <input type="button" id="id0" value="0">
-            <input type="button" id="igual" value="=">
-            <input type="button" id="res" value="-">
-        </p>
-        <p>
-        </p>
-    </form>
+        <input type="button" id="dec" value=".">
+        <input type="button" id="num" value="0">
+        <input class="calculo" type="button" id="calc" value="-">
+    </form> -->
+
+
+    <!-- <form class="Calculadora">
+        <table>
+          <tr>
+            <td colspan="4"><output id="op"></output></td>
+            <td colspan="4"><output id="rslt"></output></td>
+          </tr>
+          <tr>
+            <td><input class="operaciones" type="button" id="re" value="C"></td>
+            <td><input class="operaciones" type="button" id="borrar" value="<="></button></td>
+            <td><input class="operaciones" type="button" id="calc" value="="></td>
+          </tr>
+          <tr>
+            <td><input type="button" id="num" value="7"></td>
+            <td><input type="button" id="num" value="8"></td>
+            <td><input type="button" id="num" value="9"></td>
+            <td><input class="operaciones" type="button" id="calc" value="/"></td>
+          </tr>
+          <tr>
+            <td><input type="button" id="num" value="4"></td>
+            <td><input type="button" id="num" value="5"></td>
+            <td><input type="button" id="num" value="6"></td>
+            <td><input class="operaciones" type="button" id="calc" value="*"></td>
+          </tr>
+          <tr>
+            <td><input type="button" id="num" value="3"></td>
+            <td><input type="button" id="num" value="2"></td>
+            <td><input type="button" id="num" value="1"></td>
+            <td><input class="operaciones" type="button" id="calc" value="+"></td>
+          </tr>
+          <tr>
+            <td><input class="operaciones" type="button" id="dec" value="."></td>
+            <td><input type="button" id="num" value="0"></td>
+            <td><input class="operaciones" type="button" id="calc" value="-"></td>
+          </tr>
+          </table>
+      </form> -->
+
+      <div class="Calculadora">
+        <form name="form">
+            
+        </form>
+        <table id="teclado">
+            <tr><td colspan="2"><output id="op"></output></td></tr>
+            <tr><td colspan="4"><output id="rslt"></output></td></td></tr>
+          <td>
+            <td><input class="operaciones" type="button" id="re" value="C"></td>
+            <td><input class="operaciones" type="button" id="borrar" value="<="></button></td>
+            <td><input class="operaciones" type="button" id="calc" value="="></td>
+          </td>
+          <tr>
+            <td>
+                <td><input type="button" id="num" value="7"></td>
+                <td><input type="button" id="num" value="8"></td>
+                <td><input type="button" id="num" value="9"></td>
+                <td><input class="operaciones" type="button" id="calc" value="/"></td>
+            </td>
+          </tr>
+          <tr>
+            <td>
+                <td><input type="button" id="num" value="4"></td>
+                <td><input type="button" id="num" value="5"></td>
+                <td><input type="button" id="num" value="6"></td>
+                <td><input class="operaciones" type="button" id="calc" value="*"></td>
+            </td>
+          </tr>
+          <tr>
+            <td>
+                <td><input type="button" id="num" value="3"></td>
+                <td><input type="button" id="num" value="2"></td>
+                <td><input type="button" id="num" value="1"></td>
+                <td><input class="operaciones" type="button" id="calc" value="+"></td>
+            </td>
+          </tr>
+          <tr>
+            <td>
+                <td><input class="operaciones" type="button" id="dec" value="."></td>
+                <td><input type="button" id="num" value="0"></td>
+                <td><input class="operaciones" type="button" id="calc" value="-"></td>
+            </td>
+          </tr>
+        </table>
+      </div>
+
     <script>calculadora()</script>
 </body>
 </html>
