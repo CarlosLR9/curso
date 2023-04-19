@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora</title>
+    <link rel="stylesheet" href="./calculadora.css">
+    <script type="text/javascript" src="calculadora.js"></script>
+</head>
+<body>
+  <div class="Calculadora">
+    <form name="form">
+        
+    </form>
+    <table id="teclado">
+        <tr><td colspan="2"><output id="op"></output></td></tr>
+        <tr><td colspan="4"><output id="rslt"></output></td></tr>
+      <td>
+        <td><input class="operaciones" type="button" id="re" value="C"></td>
+        <td><input class="operaciones" type="button" id="borrar" value="<="></td>
+        <td><input class="operaciones" type="button" id="calc" value="="></td>
+      </td>
+      <tr>
+        <td>
+            <td><input type="button" id="num" value="7"></td>
+            <td><input type="button" id="num" value="8"></td>
+            <td><input type="button" id="num" value="9"></td>
+            <td><input class="operaciones" type="button" id="calc" value="/"></td>
+        </td>
+      </tr>
+      <tr>
+        <td>
+            <td><input type="button" id="num" value="4"></td>
+            <td><input type="button" id="num" value="5"></td>
+            <td><input type="button" id="num" value="6"></td>
+            <td><input class="operaciones" type="button" id="calc" value="*"></td>
+        </td>
+      </tr>
+      <tr>
+        <td>
+            <td><input type="button" id="num" value="3"></td>
+            <td><input type="button" id="num" value="2"></td>
+            <td><input type="button" id="num" value="1"></td>
+            <td><input class="operaciones" type="button" id="calc" value="+"></td>
+        </td>
+      </tr>
+      <tr>
+        <td>
+            <td><input class="operaciones" type="button" id="dec" value="."></td>
+            <td><input type="button" id="num" value="0"></td>
+            <td><input class="operaciones" type="button" id="calc" value="-"></td>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <script>Calc()</script>
+</body>
+</html>
