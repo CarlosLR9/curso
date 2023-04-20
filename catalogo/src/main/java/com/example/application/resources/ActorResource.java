@@ -54,11 +54,11 @@ public class ActorResource {
 	}
 
 	@GetMapping(path = "/{id}")
-	public ActorDetailsDTO getOne(@PathVariable int id) throws NotFoundException {
+	public ActorEditDTO getOne(@PathVariable int id) throws NotFoundException {
 		var item = srv.getOne(id);
 		if (item.isEmpty())
 			throw new NotFoundException();
-		return ActorDetailsDTO.from(item.get());
+		return ActorEditDTO.from(item.get());
 	}
 
 	@GetMapping(path = "/{id}/pelis")
