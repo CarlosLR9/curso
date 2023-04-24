@@ -59,6 +59,14 @@ public class FilmResource {
 			throw new NotFoundException();
 		return FilmDetailsDTO.from(item.get());
 	}
+	
+	@GetMapping(path = "/{id}", params = {"mode=edit"})
+	public FilmEditDTO getOne(@PathVariable int id, String mode) throws NotFoundException {
+		var item = srv.getOne(id);
+		if (item.isEmpty())
+			throw new NotFoundException();
+		return FilmEditDTO.from(item.get());
+	}
 
 	@GetMapping(path = "/{id}/actores")
 	@Transactional

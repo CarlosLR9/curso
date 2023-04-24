@@ -48,11 +48,11 @@ public class CategoryResource {
 	}
 
 	@GetMapping(path = "/{id}")
-	public CategoryDetailsDTO getOne(@PathVariable int id) throws NotFoundException {
+	public CategoryEditDTO getOne(@PathVariable int id) throws NotFoundException {
 		var item = srv.getOne(id);
 		if (item.isEmpty())
 			throw new NotFoundException();
-		return CategoryDetailsDTO.from(item.get());
+		return CategoryEditDTO.from(item.get());
 	}
 
 	@GetMapping(path = "/{id}/pelis")

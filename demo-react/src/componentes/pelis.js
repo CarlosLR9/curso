@@ -56,22 +56,24 @@ export class PelisMnt extends Component {
       modo: "add",
       elemento: {
         "filmId": 0,
-        "length": '',
+        "length": 0,
         "description": "",
         "rating": "G",
-        "releaseYear": "",
-        "rentalDuration": "",
-        "rentalRate": "",
-        "replacementCost": "",
+        "releaseYear": (new Date()).getFullYear(),
+        "rentalDuration": 3,
+        "rentalRate": 4.99,
+        "replacementCost": 19.99,
         "title": "",
-        "languageId": "",
-        "languageVOId": ""
+        "languageId": 1,
+        "languageVOId": '',
+        "actors": [],
+        "categories": []        
     },
     });
   }
   edit(key) {
     this.setState({ loading: true });
-    fetch(`${this.url}/${key}`)
+    fetch(`${this.url}/${key}?mode=edit`)
       .then((response) => {
         response.json().then(
           response.ok
@@ -247,7 +249,10 @@ function PelisList(props) {
         <tbody className="table-group-divider">
           {props.listado.map((item) => (
             <tr key={item.filmId}>
-              <td>{titleCase(item.title)}</td>
+              <td>
+                <img src={`https://picsum.photos/id/${item.filmId}/500/400`} alt={`Foto de ${item.title}`} width="15%" height="15%" />
+                {" " + titleCase(item.title)}
+              </td>
               <td className="text-end">
                 <div className="btn-group text-end" role="group">
                   <input
@@ -286,12 +291,16 @@ function PelisList(props) {
 function PelisView({ elemento, onCancel }) {
   return (
     <div>
+      <img src={`https://picsum.photos/id/${elemento.filmId}/500/300`} className="img-fluid" alt={`Foto de ${elemento.title}`} />
       <p>
+        <ul className="list-inline">
+          {elemento.categories.map(item => <li ley={item} className="list-inline-item badge bg-primary">{item}</li>)}
+        </ul>
         <b>Código:</b> {elemento.filmId}
         <br />
         <b>Título:</b> {elemento.title}
         <br />
-        <b>Duración:</b> {elemento.length}
+        <b>Duración:</b> {elemento.length} minutos
         <br />
         <b>Año de lanzamiento:</b> {elemento.releaseYear}
         <br />
@@ -303,13 +312,16 @@ function PelisView({ elemento, onCancel }) {
         <br />
         <b>Calificación por edades:</b> {elemento.rating}
         <br />
-        <b>Precio de alquiler:</b> {elemento.rentalRate}
+        <b>Precio de alquiler:</b> {elemento.rentalRate}€
         <br />
-        <b>Duración del alquiler:</b> {elemento.rentalDuration}
+        <b>Duración del alquiler:</b> {elemento.rentalDuration} días
         <br />
-        <b>Precio de reemplazo:</b> {elemento.replacementCost}
-        <br />
-        <b>Actores:</b> {elemento.actors.map(item => " -" + item)}
+        <b>Precio de reemplazo:</b> {elemento.replacementCost}€
+        <h1>Reparto</h1>
+        <ul className="list">
+          {elemento.actors.map((item, index) => <li ley={index}>{titleCase(item)}</li>)}
+        </ul>
+        
       </p>
       <p>
         <button
@@ -327,7 +339,18 @@ function PelisView({ elemento, onCancel }) {
 class PelisForm extends Component {
   constructor(props) {
     super(props);
-    this.state = { elemento: props.elemento, msgErr: [], invalid: false };
+    this.state = { 
+      elemento: props.elemento, 
+      msgErr: [], 
+      invalid: false,
+      idActor: null,
+      idCategoria: null,
+      actores: [],
+      categorias: [],
+      lenguajes: []
+    };
+    this.form = React.createRef();
+    this.url = (process.env.REACT_APP_API_URL || 'http://localhost:8010');
     this.handleChange = this.handleChange.bind(this);
     this.onSend = () => {
       if (this.props.onSend) this.props.onSend(this.state.elemento);
@@ -373,9 +396,50 @@ class PelisForm extends Component {
       this.setState({ msgErr: errors, invalid: invalid });
     }
   }
+
+  setError(msg) {
+    this.setState({ error: msg, loading: false });
+  }
+
   componentDidMount() {
     this.validar();
+    this.setActores();
+    this.setCategorias();
+    this.setLenguajes();
   }
+
+  setLenguajes() {
+    fetch(`${this.url}/api/lenguajes/v1`)
+          .then(response => {
+              response.json().then(response.ok ? data => {
+                  this.setState({lenguajes: data})
+              } : error => this.setError(`${error.status}: ${error.error}`))
+          })
+          .catch(error => this.setError(error.message))
+  }
+
+  setCategorias() {
+    fetch(`${this.url}/api/categorias/v1`)
+        .then(response => {
+            response.json().then(response.ok ? data => {
+                if (data.length > 0) this.setState({idCategoria: data[0].id})
+                this.setState({categorias: data})
+            } : error => this.setError(`${error.status}: ${error.error}`))
+        })
+        .catch(error => this.setError(error.message))
+  }
+
+  setActores() {
+    fetch(`${this.url}/api/actores/v1?sort=firstName`)
+        .then(response => {
+            response.json().then(response.ok ? data => {
+                if (data.length > 0) this.setState({idActor: data[0].actorId})
+                this.setState({actores: data})
+            } : error => this.setError(`${error.status}: ${error.error}`))
+        })
+        .catch(error => this.setError(error.message))
+  }
+
   render() {
     return (
       <form
@@ -383,20 +447,6 @@ class PelisForm extends Component {
           this.form = tag;
         }}
       >
-        <div className="form-group">
-          <label htmlFor="filmId">Código</label>
-          <input
-            type="number"
-            className={"form-control" + (this.props.isAdd ? "" : "-plaintext")}
-            id="filmId"
-            name="filmId"
-            value={this.state.elemento.filmId}
-            onChange={this.handleChange}
-            required
-            readOnly={!this.props.isAdd}
-          />
-          <ValidationMessage msg={this.state.msgErr.filmId} />
-        </div>
         <div className="form-group">
           <label htmlFor="title">Título</label>
           <input
@@ -414,17 +464,20 @@ class PelisForm extends Component {
         </div>
         <div className="form-group">
           <label htmlFor="length">Duración</label>
-          <input
-            type="number"
-            className="form-control"
-            id="length"
-            name="length"
-            value={this.state.elemento.length}
-            onChange={this.handleChange}
-            required
-            min="1"
-            max="99999"
-          />
+          <div className="input-group">
+            <input
+              type="number"
+              className="form-control"
+              id="length"
+              name="length"
+              value={this.state.elemento.length}
+              onChange={this.handleChange}
+              required
+              min="1"
+              max="99999"
+            />
+            <span className="input-group-text">minutos</span>
+          </div>
           <ValidationMessage msg={this.state.msgErr.length} />
         </div>
         <div className="form-group">
@@ -437,6 +490,7 @@ class PelisForm extends Component {
             value={this.state.elemento.releaseYear}
             onChange={this.handleChange}
             min="1901"
+            max={(new Date()).getFullYear()}
           />
           <ValidationMessage msg={this.state.msgErr.releaseYear} />
         </div>
@@ -453,36 +507,28 @@ class PelisForm extends Component {
           <ValidationMessage msg={this.state.msgErr.description} />
         </div>
         <div className="form-group">
-          <label htmlFor="languageId">Lenguaje</label>
-          <input
-            type="text"
-            className="form-control"
-            id="languageId"
-            name="languageId"
-            value={this.state.elemento.languageId}
-            onChange={this.handleChange}
-            required
-            minLength="1"
-          />
-          <ValidationMessage msg={this.state.msgErr.languageId} />
-        </div>
-        <div className="form-group">
-          <label htmlFor="languageVOId">Lenguaje versión original</label>
-          <input
-            type="text"
-            className="form-control"
-            id="languageVOId"
-            name="languageVOId"
-            value={this.state.elemento.languageVOId}
-            onChange={this.handleChange}
-            minLength="1"
-          />
-          <ValidationMessage msg={this.state.msgErr.languageVOId} />
-        </div>
+                <label htmlFor="languageId">Lenguaje</label>
+                <select className="form-select"
+                    id="languageId" name="languageId" value={this.state.elemento.languageId}
+                    onChange={this.handleChange} >
+                    {this.state.lenguajes.map(item => <option key={item.id} value={item.id}>{item.nombre}</option>)}
+                </select>
+                <ValidationMessage msg={this.state.msgErr.languageId} />
+            </div>
+            <div className="form-group">
+                <label htmlFor="languageVOId">Lenguaje Versión original</label>
+                <select className="form-select"
+                    id="languageVOId" name="languageVOId" value={this.state.elemento.languageVOId}
+                    onChange={this.handleChange} >
+                    <option value=''></option>
+                    {this.state.lenguajes.map(item => <option key={item.id} value={item.id}>{item.nombre}</option>)}
+                </select>
+                <ValidationMessage msg={this.state.msgErr.languageVOId} />
+            </div>
         <div className="form-group">
           <label htmlFor="rating">Calificación por edades</label>
           <select 
-            className="form-control"
+            className="form-select"
             id="rating"
             name="rating"
             value={this.state.elemento.rating}
@@ -494,48 +540,103 @@ class PelisForm extends Component {
         </div>
         <div className="form-group">
           <label htmlFor="rentalRate">Precio de alquiler</label>
-          <input
-            type="number"
-            step="0.01"
-            className="form-control"
-            id="rentalRate"
-            name="rentalRate"
-            value={this.state.elemento.rentalRate}
-            onChange={this.handleChange}
-            required
-            min="0"
-          />
+          <div className="input-group">
+            <input
+              type="number"
+              step="0.01"
+              className="form-control"
+              id="rentalRate"
+              name="rentalRate"
+              value={this.state.elemento.rentalRate}
+              onChange={this.handleChange}
+              required
+              min="0"
+            />
+            <span className="input-group-text">€</span>
+          </div>
           <ValidationMessage msg={this.state.msgErr.rentalRate} />
         </div>
         <div className="form-group">
           <label htmlFor="rentalDuration">Duración del alquiler</label>
-          <input
-            type="number"
-            className="form-control"
-            id="rentalDuration"
-            name="rentalDuration"
-            value={this.state.elemento.rentalDuration}
-            onChange={this.handleChange}
-            required
-            min="1"
-          />
+          <div className="input-group">
+            <input
+              type="number"
+              className="form-control"
+              id="rentalDuration"
+              name="rentalDuration"
+              value={this.state.elemento.rentalDuration}
+              onChange={this.handleChange}
+              required
+              min="1"
+            />
+            <span className="input-group-text">días</span>
+          </div>
           <ValidationMessage msg={this.state.msgErr.rentalDuration} />
         </div>
         <div className="form-group">
           <label htmlFor="replacementCost">Precio de reemplazo</label>
-          <input
-            type="number"
-            step="0.01"
-            className="form-control"
-            id="replacementCost"
-            name="replacementCost"
-            value={this.state.elemento.replacementCost}
-            onChange={this.handleChange}
-            required
-            min="0"
-          />
+          <div className="input-group">
+            <input
+              type="number"
+              step="0.01"
+              className="form-control"
+              id="replacementCost"
+              name="replacementCost"
+              value={this.state.elemento.replacementCost}
+              onChange={this.handleChange}
+              required
+              min="0"
+            />
+            <span className="input-group-text">€</span>
+          </div>
           <ValidationMessage msg={this.state.msgErr.replacementCost} />
         </div>
+        <div className="form-group">
+                <label htmlFor="categories">Categorías</label>
+                <div className="input-group">
+                    <select className="form-select" id="categories" name="categories" onChange={ev => this.setState({idCategoria: ev.target.value})}>
+                        {this.state.categorias.map(item => <option key={item.id} value={item.id}>{item.nombre}</option>)}
+                    </select>
+                    <button className="btn btn-outline-secondary" type="button" onClick={() => {
+                        if (this.state.elemento.categories.includes(this.state.idCategoria)) return
+                        this.state.elemento.categories.push(this.state.idCategoria)
+                        this.setState({elemento: { ...this.state.elemento }})
+                    }} ><i>+</i></button>
+                </div>
+                <ValidationMessage msg={this.state.msgErr.categories} />
+                <ul>
+                    {this.state.elemento.categories.map((item, index) =>
+                        <li key={index}>{this.state.categorias.find(ele => ele.id == item)?.nombre} <button className="btn btn-link" type="button"
+                            title='Quita categoría' onClick={() => {
+                              this.state.elemento.categories.splice(index, 1)
+                              this.setState({elemento: { ...this.state.elemento }})
+                            }}><i>Borrar</i></button></li>
+                    )}
+                </ul>
+            </div>
+            <div className="form-group">
+                <label htmlFor="actors">Reparto</label>
+                <div className="input-group">
+                    <select className="form-select" id="actors" name="actors" onChange={ev => this.setState({idActor: ev.target.value})}>
+                        {this.state.actores.map(item => <option key={item.actorId} value={item.actorId}>{titleCase(item.nombre)}</option>)}
+                    </select>
+                    <button className="btn btn-outline-secondary" type="button" onClick={() => {
+                        if (this.state.elemento.actors.includes(this.state.idActor)) return
+                        this.state.elemento.actors.push(this.state.idActor)
+                        this.setState({elemento: { ...this.state.elemento }})
+                    }} ><i>+</i></button>
+                </div>
+                <ValidationMessage msg={this.state.msgErr.actors} />
+                <ul>
+                    {this.state.elemento.actors.map((item, index) =>
+                        <li key={index}>{titleCase(this.state.actores.find(ele => ele.actorId == item)?.nombre)} <button className="btn btn-link" type="button"
+                            title='Quita categoría' onClick={() => {
+                              this.state.elemento.actors.splice(index, 1)
+                              this.setState({elemento: { ...this.state.elemento }})
+                            }}><i>Borrar</i></button></li>
+                    )}
+                </ul>
+            </div>
         <div className="form-group">
           <button
             className="btn btn-primary"

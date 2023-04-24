@@ -353,7 +353,7 @@ class ActoresForm extends Component {
           this.form = tag;
         }}
       >
-        <div className="form-group">
+        {/* <div className="form-group">
           <label htmlFor="id">Código</label>
           <input
             type="number"
@@ -366,7 +366,7 @@ class ActoresForm extends Component {
             readOnly={!this.props.isAdd}
           />
           <ValidationMessage msg={this.state.msgErr.id} />
-        </div>
+        </div> */}
         <div className="form-group">
           <label htmlFor="nombre">Nombre</label>
           <input

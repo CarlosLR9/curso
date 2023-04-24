@@ -48,11 +48,11 @@ public class LanguageResource {
 	}
 
 	@GetMapping(path = "/{id}")
-	public LanguageDetailsDTO getOne(@PathVariable int id) throws NotFoundException {
+	public LanguageEditDTO getOne(@PathVariable int id) throws NotFoundException {
 		var item = srv.getOne(id);
 		if (item.isEmpty())
 			throw new NotFoundException();
-		return LanguageDetailsDTO.from(item.get());
+		return LanguageEditDTO.from(item.get());
 	}
 
 	@GetMapping(path = "/{id}/pelis")
